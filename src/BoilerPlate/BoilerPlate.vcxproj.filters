@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="App.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="SDLEvent.cpp" />
+    <ClCompile Include="TimeManager.cpp" />
+    <ClCompile Include="stb_image.c" />
+    <ClCompile Include="ColorRepresentation.cpp" />
+    <ClCompile Include="MathUtilities.cpp" />
+    <ClCompile Include="Color.cpp" />
+    <ClCompile Include="_vector2.cpp">
+      <Filter>Engine\Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="_vector3.cpp">
+      <Filter>Engine\Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>Engine\Source files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="App.hpp" />
+    <ClInclude Include="SDLEvent.hpp" />
+    <ClInclude Include="TimeManager.hpp" />
+    <ClInclude Include="Color.h" />
+    <ClInclude Include="ColorRepresentation.h" />
+    <ClInclude Include="MathUtilities.h" />
+    <ClInclude Include="_vector2.h">
+      <Filter>Engine\Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="_vector3.h">
+      <Filter>Engine\Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>Engine\Header files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Engine">
+      <UniqueIdentifier>{6f9fb37f-e47b-46c3-8209-dbf486018555}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Source files">
+      <UniqueIdentifier>{0a3ec513-922c-4b14-83e3-98e1934fea74}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Header files">
+      <UniqueIdentifier>{da8cc683-e66e-46b9-be58-7d0e16e23f76}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

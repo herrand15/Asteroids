@@ -18,6 +18,9 @@
     <ClCompile Include="Player.cpp">
       <Filter>Engine\Source files</Filter>
     </ClCompile>
+    <ClCompile Include="_vector4.cpp">
+      <Filter>Engine\Source files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.hpp" />
@@ -33,6 +36,9 @@
       <Filter>Engine\Header files</Filter>
     </ClInclude>
     <ClInclude Include="Player.h">
+      <Filter>Engine\Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="_vector4.h">
       <Filter>Engine\Header files</Filter>
     </ClInclude>
   </ItemGroup>

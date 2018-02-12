@@ -41,7 +41,7 @@ float Vector3::normalizar() {
 
 Vector3& Vector3::operator=(Vector3& rightSide)
 {
-	// Prevent self assignment
+	
 	if (this == &rightSide) return *this;
 
 	x = rightSide.x;

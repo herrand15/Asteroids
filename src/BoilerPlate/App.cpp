@@ -5,6 +5,7 @@
 // OpenGL includes
 #include <GL/glew.h>
 #include <SDL2/SDL_opengl.h>
+//
 #include "Player.h"
 #include "_vector2.h"
 
@@ -87,20 +88,21 @@ namespace Engine
 		switch (keyBoardEvent.keysym.scancode)
 		{
 		case SDL_SCANCODE_W:
-			SDL_Log("Moviendo hacia arriba");
-			p1->Move(Vector2(0.0f, 3.0f));
+			SDL_Log("Moviendo adelante");
+			p1->Move(Vector2(0.0, 4.0));
+			p1->setIsSpeedingUp();
 			break;
 		case SDL_SCANCODE_A:
 			SDL_Log("Moviendo hacia la izquierda");
-			p1->Move(Vector2(-3.0f, 0.0f));
+			p1->Move(Vector2(-4.0, 0.0));
 			break;
 		case SDL_SCANCODE_S:
-			SDL_Log("Moviendo hacia abajo");
-			p1->Move(Vector2(0.0f, -3.0f));
+			SDL_Log("Moviendo hacia atras");
+			p1->Move(Vector2(0.0f, -4.0f));
 			break;
 		case SDL_SCANCODE_D:
 			SDL_Log("Moviendo hacia la derecha");
-			p1->Move(Vector2(3.0f, 0.0f));
+			p1->Move(Vector2(4.0, 0.0));
 			break;
 
 		default:			
@@ -153,13 +155,6 @@ namespace Engine
 		glClear(GL_COLOR_BUFFER_BIT);
 		
 		p1->Render();
-		/*
-		glBegin(GL_LINE_LOOP);
-		glVertex2f(25.0, 25.0);
-		glVertex2f(12.5, -12.5);
-		glVertex2f(-12.5, -12.5);
-		glVertex2f(-12.5, 12.5);
-		glEnd();*/
 		
 		SDL_GL_SwapWindow(m_mainWindow);
 	}

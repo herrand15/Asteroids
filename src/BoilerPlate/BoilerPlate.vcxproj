@@ -182,6 +182,7 @@ copy /Y "$(SolutionDir)\Externals\SDL2-2.0.4\lib\x64\SDL2.dll" "$(TargetDir)SDL2
     <ClCompile Include="TimeManager.cpp" />
     <ClCompile Include="_vector2.cpp" />
     <ClCompile Include="_vector3.cpp" />
+    <ClCompile Include="_vector4.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.hpp" />
@@ -193,6 +194,7 @@ copy /Y "$(SolutionDir)\Externals\SDL2-2.0.4\lib\x64\SDL2.dll" "$(TargetDir)SDL2
     <ClInclude Include="TimeManager.hpp" />
     <ClInclude Include="_vector2.h" />
     <ClInclude Include="_vector3.h" />
+    <ClInclude Include="_vector4.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

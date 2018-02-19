@@ -3,16 +3,16 @@
 #include <algorithm>
 #include "ColorRepresentation.h"
 // OpenGL includes
-#include <GL/glew.h>
+//#include <GL/glew.h>
 #include <SDL2/SDL_opengl.h>
 //
-#include "Player.h"
+//#include "Player.h"
 #include "_vector2.h"
 
 namespace Engine
 {
 
-	Player* p1 = new Player();
+	
 	const float DESIRED_FRAME_RATE = 60.0f;
 	const float DESIRED_FRAME_TIME = 1.0f / DESIRED_FRAME_RATE;
 
@@ -27,6 +27,9 @@ namespace Engine
 		
 		m_state = GameState::UNINITIALIZED;
 		m_lastFrameTime = m_timer->GetElapsedTimeInSeconds();
+
+		p1 = new Player(m_width, m_height);
+		ast = new Asteroid(m_width, m_height);
 	}
 
 	
@@ -89,20 +92,20 @@ namespace Engine
 		{
 		case SDL_SCANCODE_W:
 			SDL_Log("Moviendo adelante");
-			p1->Move(Vector2(0.0, 4.0));
+			p1->MoveForward();
 			p1->setIsSpeedingUp();
 			break;
 		case SDL_SCANCODE_A:
-			SDL_Log("Moviendo hacia la izquierda");
-			p1->Move(Vector2(-4.0, 0.0));
+			SDL_Log("Rotando a la izquierda");
+			p1->RotateLeft();
 			break;
 		case SDL_SCANCODE_S:
 			SDL_Log("Moviendo hacia atras");
-			p1->Move(Vector2(0.0f, -4.0f));
+			//p1->MoveForward();
 			break;
 		case SDL_SCANCODE_D:
-			SDL_Log("Moviendo hacia la derecha");
-			p1->Move(Vector2(4.0, 0.0));
+			SDL_Log("Rotando a la derecha");
+			p1->RotateRight();
 			break;
 
 		default:			
@@ -155,7 +158,7 @@ namespace Engine
 		glClear(GL_COLOR_BUFFER_BIT);
 		
 		p1->Render();
-		
+		ast->Render();
 		SDL_GL_SwapWindow(m_mainWindow);
 	}
 
@@ -254,6 +257,7 @@ namespace Engine
 		//
 		m_width = width;
 		m_height = height;
+		p1->resizeWidthAndHeight(m_width, m_height);
 
 		SetupViewport();
 	}

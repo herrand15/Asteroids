@@ -6,6 +6,8 @@ using namespace std;
 
 
 class MathUtilities {
+public:
+	const float pi =  3.141592653f;
 };
 
 int nearestInt(float g);
@@ -26,23 +28,19 @@ template <class anyNumber>
 anyNumber minimumNum(anyNumber a) {
 	return a;
 }
+
 template <class anyNumber, class ... Args>
 anyNumber minimumNum(anyNumber a, Args ... type) {
 	return min(a, minimumNum(type));
-
 }
 
 
 
 float range(float value, float low, float high);
-
 float degreeToRadians(float angle);
 float radiansToDegree(float angle);
-
 float angularDistance(float a, float b);
-
 bool isPowerOfTwo(int x);
-
 float interpolate(float percentage, float low, float high);
 
 

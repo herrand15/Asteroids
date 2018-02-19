@@ -47,11 +47,11 @@ float range(float value, float low, float high) {
 }
 
 float degreeToRadians(float angle) {
-	return (angle *3.14159) / 180;
+	return (angle *3.14159f) / 180;
 }
 
 float radiansToDegree(float angle) {
-	return (angle * 180) / 3.14159;
+	return (angle * 180) / 3.14159f;
 }
 
 float angularDistance(float a, float b) {

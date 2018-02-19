@@ -6,10 +6,13 @@
 #include <string>
 #include <list>
 
+
 // Asteroids
 #include "SDLEvent.hpp"
 #include "TimeManager.hpp"
-
+#include <GL/glew.h>
+#include"Player.h"
+#include"asteroid.h"
 namespace Engine
 {
 	class App : public SDLEvent
@@ -66,7 +69,8 @@ namespace Engine
 		SDL_GLContext						m_context;
 		GameState::State					m_state;
 		Engine::TimeManager*				m_timer;
-
+		Player*								p1;
+		Asteroid*                           ast;
 	};
 }
 #endif /* GAME_HPP */

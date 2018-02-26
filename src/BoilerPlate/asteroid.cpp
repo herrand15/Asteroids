@@ -1,52 +1,67 @@
 #include "asteroid.h"
 #include "MathUtilities.h"
+#include <cstdlib>
+#include <ctime>
 using namespace std;
-Asteroid::Asteroid(float height_, float width_) {
-	position = new Vector2(Vector2::Origin);
+
+Asteroid::Asteroid(int width_, int height_, char size_) {
+	srand(time(NULL));
+
+	position = Vector2((rand() % width_)-width_, (rand() %height_)-height_);
 	height = height_;
 	width = width_;
-	directionAngle = 0.0f;
+	direction = rand() % 360;
+	collided = false;
+	size = size_;
+	if (size == 's')
+		radius = 13.3;
+	if (size == 'm')
+		radius = 27.55;
+	if (size == 'l')
+		radius = 47.5;
 
-	asteroidPoints[0] = Vector2(35.8f, 39.5f);
-	asteroidPoints[1] = Vector2(0.0f,52.0f);
-	asteroidPoints[2] = Vector2(-20.9f, 44.2f);
-	asteroidPoints[3] = Vector2(-32.8f, 24.3f);
-	asteroidPoints[4] = Vector2(-28.6f, 3.7f);
-	asteroidPoints[5] = Vector2(-12.7f,-15.5f);
-	asteroidPoints[6] = Vector2(20.0f, -20.0f);
-	asteroidPoints[7] = Vector2(38.4f, -6.8f);
-	asteroidPoints[8] = Vector2(33.4f, 9.1f);
-	asteroidPoints[9] = Vector2(42.6f, 26.4f);
+
+	asteroidPoints[0] = Vector2(-5.0f, 8.1f);
+	asteroidPoints[1] = Vector2(-10.5f,3.9f);
+	asteroidPoints[2] = Vector2(-11.2f, -0.6f);
+	asteroidPoints[3] = Vector2(-7.8f, -2.1f);
+	asteroidPoints[4] = Vector2(-10.0f, -5.0f);
+	asteroidPoints[5] = Vector2(-4.9f,-9.2f);
+	asteroidPoints[6] = Vector2(1.9f, -9.6f);
+	asteroidPoints[7] = Vector2(5.7f, -8.1f);
+	asteroidPoints[8] = Vector2(8.6f,-7.2f);
+	asteroidPoints[9] = Vector2(8.4f, -4.3f);
+	asteroidPoints[10] = Vector2(8.4f, -1.7f);
+	asteroidPoints[11] = Vector2(9.8f, 3.0f);
+	asteroidPoints[12] = Vector2(4.5f, 8.6f);
 }
 
-void Asteroid::rotate() {
-	directionAngle += degreeToRadians(230);
-}
 
-void Asteroid::drawAsteroid(char size) {
-	glBegin(GL_LINE_LOOP);
+
+void Asteroid::drawAsteroid() {
+	glColor3f(0.5, 0.5, 0.5);
+	glBegin(GL_POLYGON);
 	switch (size) {
 		//this switch will take a char; 's' will draw a small asteroid, 'm' a medium one and 'l' a large one
 	case 's':
-		for (int i = 0; i < 10; i++) {
-			glVertex2f(asteroidPoints[i].x *0.7f, asteroidPoints[i].y *0.7f);
+		for (int i = 0; i < 13; i++) {
+			glVertex2f(asteroidPoints[i].x *1.4, asteroidPoints[i].y *1.4 );
 		}
-		size = 's';
+		Mass = 1.0;
 		break;
 	case 'm':
-		for (int i = 0; i < 10; i++) {
-			glVertex2f(asteroidPoints[i].x , asteroidPoints[i].y );
+		for (int i = 0; i < 13; i++) {
+			glVertex2f(asteroidPoints[i].x *2.9f , asteroidPoints[i].y *2.9f );
 		}
-		size = 'm';
+		Mass = 1.5;
 		break;
 	case 'l':
-		for (int i = 0; i < 10; i++) {
-			glVertex2f(asteroidPoints[i].x *1.3f, asteroidPoints[i].y *1.3f);
+		for (int i = 0; i < 13; i++) {
+			glVertex2f(asteroidPoints[i].x *5.0f, asteroidPoints[i].y *5.0f);
 		}
-		size = 'l';
+		Mass = 2.0;
 		break;
 	}
-
 	glEnd();
 }
 
@@ -54,10 +69,57 @@ char Asteroid::getSize() {
 	return size;
 }
 
+void Asteroid::setSize(char size_) {
+	size = size_;
+}
+
+void Asteroid::setPosition(Vector2 pos) {
+	position = pos;
+}
+
+
+bool Asteroid::checkCollision(Entity* gameEntity) {
+	if ((radius + gameEntity->getRadius()) < sqrt(((position.x - gameEntity->getPosition().x)*(position.x - gameEntity->getPosition().x)) + ((position.y - gameEntity->getPosition().y)*(position.y - gameEntity->getPosition().y)))) {
+		collided = false;
+		return false;
+	}
+	else{
+		if (size == 'l' && gameEntity->getRadius()!=23.50) {
+			radius = 27.55;
+		}
+		else if (size == 'm' && gameEntity->getRadius() != 23.50) {
+			radius = 13.3;
+		}
+		collided = true;
+		return true;
+	}
+}
+
+
+
+void Asteroid::Update(float timeDiff)
+{
+	int currentSpeed;
+	if (size == 's')
+		currentSpeed = 3.2;
+	if (size == 'm')
+		currentSpeed = 3.0;
+	if (size == 'l')
+		currentSpeed = 2.0;
+	
+	position.x += currentSpeed * cos(degreeToRadians(direction));
+	position.y += currentSpeed * sin(degreeToRadians(direction));
+
+	position.x = Warp(position.x, width / 2, -width / 2);
+	position.y = Warp(position.y, height / 2, -height / 2);
+
+	speed = velocity.calculateLength();
+
+	Entity::Update(timeDiff);
+}
+
 void Asteroid::Render() {
 	glLoadIdentity();
-	glTranslatef(position->x, position->y , 0.0);
-	glRotatef(directionAngle, 0.0, 0.0, 1.0);
-	drawAsteroid('l');
-
+	glTranslatef(position.x, position.y, 0.0);
+	drawAsteroid();
 }

@@ -13,6 +13,8 @@
 #include <GL/glew.h>
 #include"Player.h"
 #include"asteroid.h"
+#include "Bullet.h"
+#include <vector>
 namespace Engine
 {
 	class App : public SDLEvent
@@ -55,7 +57,8 @@ namespace Engine
 		void OnExit							( ) override;
 		void OnKeyDown						( SDL_KeyboardEvent keyBoardEvent ) override;
 		void OnKeyUp						( SDL_KeyboardEvent keyBoardEvent ) override;
-
+		void createFrameRateGraph();
+		void createFrameRate();
 
 		/* =============================================================
 		 * MEMBERS
@@ -70,7 +73,22 @@ namespace Engine
 		GameState::State					m_state;
 		Engine::TimeManager*				m_timer;
 		Player*								p1;
-		Asteroid*                           ast;
+		std::vector<Asteroid*>              asteroids;
+		std::vector<Bullet*>                bullets;
+		float                               frameDeltaTime;
+		Vector2								frames[20];
+		int                               framePosition;
+
+		char								smalll;
+		char								medium;
+		char								large;
+
+		bool								upArrow;
+		bool								leftArrow ;
+		bool								rightArrow;
+		bool								spaceBar;
+		bool								debugMode;
+		bool								showFrame;
 	};
 }
 #endif /* GAME_HPP */

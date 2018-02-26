@@ -1,13 +1,21 @@
 #include "Player.h"
 #include "MathUtilities.h"
 
+
+
+const float MAX_SPEED = 400;
+const float FRICTION = 0.99f;
+const float breakAway = 8.5f;
+
 Player::Player(float width_, float height_) {
-	position = new Vector2(Vector2::Origin);
+	position = Vector2(Vector2::Origin);
 	
 	height = height_;
 	width = width_;
 	directionAngle = 0.0;
-
+	radius = 23.50;
+	Mass = 1.0;
+	
 
 	shipPoints[0] = Vector2(25.0f, 25.0f);
 	shipPoints[1] = Vector2(12.5f, -12.5f);
@@ -27,42 +35,27 @@ Player::Player(float width_, float height_) {
 
 
 void Player::MoveForward() {
-	position->x += 8.0f * cos(degreeToRadians(directionAngle + 45));
-	position->y += 8.0f * sin(degreeToRadians(directionAngle + 45));
 
-	position->x = Warp(position->x, width/2, -width/2);
-	position->y = Warp(position->y, height/2, -height/2);
+	acceleration(Vector2(breakAway, breakAway));
 }
 
 void Player::RotateLeft() {
-	directionAngle += degreeToRadians(300);
+	directionAngle += degreeToRadians(270);
 }
 
 void Player::RotateRight() {
-	directionAngle -= degreeToRadians(300);
+	directionAngle -= degreeToRadians(270);
 }
 
-float Player::Warp(float position, float maxP, float minP) {
-	if (position < minP) {
-		return maxP - (minP - position);
-	}
-	if (position > maxP) {
-		return minP + (position - maxP);
-	}
-	return position;
-}
-
-void Player::resizeWidthAndHeight(float Widht, float Height) {
-	width = Widht;
-	height = Height;
-}
 
 void Player::setIsSpeedingUp() {
   isSpeedingUp = true;
 }
 
 void Player::drawShip() {
-	glBegin(GL_LINE_LOOP);
+
+    glColor3f(0.0, 0.0, 0.0);
+	glBegin(GL_POLYGON);
 	for (int i = 0; i < 4; i++) {
 		glVertex2f(shipPoints[i].x, shipPoints[i].y);
 	}
@@ -70,28 +63,86 @@ void Player::drawShip() {
 }
 
 void Player::drawThruster() {
-	glBegin(GL_LINE_LOOP);
+	glColor3f(1.0, 0.5, 0.0);
+	glBegin(GL_POLYGON);
 
 	for (int i = 0; i< 8; i++) {
 		glVertex2f(thrusterPoints[i].x, thrusterPoints[i].y);
 	}
-	isSpeedingUp = false;
 	glEnd();
 
+}
+
+
+void Player::acceleration(Vector2 impulse) {
+	velocity.x += (impulse.x / Mass) * cos(degreeToRadians(directionAngle+45) );
+	velocity.y += (impulse.y / Mass) * sin(degreeToRadians(directionAngle+45) );
+	
 }
 
 
 void Player::Render() {
 	glLoadIdentity();
 
-	glTranslatef(position->x ,position->y, 0.0f);
+	glTranslatef(position.x ,position.y, 0.0f);
 	glRotatef(directionAngle, 0.0, 0.0, 1.0);
 
 	drawShip();
-	//Dibujar el fuego si la nave esta avanzando
 	if (isSpeedingUp==true) {
 		drawThruster();
 	}
 
+}
 
+Vector2 Player::getPosition() {
+	return position;
+}
+
+int Player::getAngle() {
+	return directionAngle;
+}
+
+
+void Player::StopThrust()
+{
+	isSpeedingUp = false;
+}
+
+void Player::Update(float timeDiff) {
+	speed = velocity.calculateLength();
+
+	if (speed > MAX_SPEED)
+	{
+		velocity.x = (velocity.x / speed) * MAX_SPEED;
+		velocity.y = (velocity.y / speed) * MAX_SPEED;
+	}
+
+	Entity::Update(timeDiff);
+
+
+	if (!isSpeedingUp) velocity =  velocity* FRICTION;
+
+}
+
+Bullet* Player::shoot() {
+	Bullet * Shot = new Bullet(width,height);
+	Shot->Actualize(Vector2(500.0f,500.0f), position, directionAngle+45);
+	return Shot;
+}
+
+
+void Player::drawLines(Asteroid* asteroid_) {
+	
+	glLoadIdentity();
+	glTranslatef(0.0f, 0.0f, 0.0f);
+	glRotatef(0.0, 0.0, 0.0, 1.0);
+	float distance = sqrt(((position.x - asteroid_->getPosition().x)*(position.x - asteroid_->getPosition().x)) + ((position.y - asteroid_->getPosition().y)*(position.y - asteroid_->getPosition().y)));
+
+	if (distance < 475) {
+		glColor3f(1.0, 0.0, 0.0);
+		glBegin(GL_LINE_STRIP);
+		glVertex2f(position.x, position.y);
+		glVertex2f(asteroid_->getPosition().x, asteroid_->getPosition().y);
+		glEnd();
+	}
 }

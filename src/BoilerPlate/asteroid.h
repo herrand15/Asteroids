@@ -4,36 +4,28 @@
 
 #include "_vector2.h"
 #include "Entity.h"
+#include "Bullet.h"
 #include "SDLEvent.hpp"
 #include <SDL2/SDL_opengl.h>
 
-class Asteroid : Entity {
-protected:
-	Vector2 asteroidPoints[10];
+class Asteroid : public Entity {
+private:
+	Vector2 asteroidPoints[13];
 	char size;
-
+	int direction;
+	bool collided;
 
 public:
-	Asteroid(float height, float width);
-	void move();
-	void rotate(); 
-	void drawAsteroid(char size);
+	Asteroid(int width_, int height_, char size_); 
+	void drawAsteroid();
 	char getSize();
-	void Update();
+	bool checkCollision(Entity* gameEntity);
+	void setSize(char size_);
+	void setPosition(Vector2 pos);
+	void Update(float timeDiff);
 	void Render();
 
 
 };
-
-
-
-
-
-
-
-
-
-
-
 
 #endif // ASTEROID_H_INCLUDED

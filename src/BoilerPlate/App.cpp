@@ -3,10 +3,11 @@
 #include <algorithm>
 #include "ColorRepresentation.h"
 // OpenGL includes
-#include <SDL2/SDL_opengl.h>
+#include <SDL_opengl.h>
+#include <SDL_ttf.h>
 
 #include "_vector2.h"
-//#include <ctime>
+#include <string>
 
 namespace Engine
 {
@@ -31,15 +32,12 @@ namespace Engine
 		leftArrow = false;
 		rightArrow = false;
 		spaceBar = false;
-		debugMode = false;
 		showFrame = false;
 		large = 'l';
 		smalll = 's';
 		medium = 'm';
-		//srand(time(NULL));
 
-		p1 = new Player(m_width, m_height);
-		asteroids.push_back(new Asteroid(m_width, m_height, large));
+		Game1 = Game(m_width, m_height);
 
 		
 		for (int i = 0; i < maxFrames; i++) {
@@ -50,8 +48,8 @@ namespace Engine
 		
 	}
 
-
-
+	TTF_Font*  m_font;
+	
 	
 	App::~App()
 	{
@@ -95,6 +93,26 @@ namespace Engine
 			return false;
 		}
 
+		if (TTF_Init() == -1) {
+			SDL_Log("TTF_Init: %s\n", TTF_GetError());
+			return false;
+		}
+		m_font = TTF_OpenFont("Hyperspace.ttf", 50);
+
+		SDL_version compile_version;
+		const SDL_version *link_version = TTF_Linked_Version();
+		SDL_TTF_VERSION(&compile_version);
+
+		SDL_Log("compiled with SDL_ttf version: %d.%d.%d\n",
+			compile_version.major,
+			compile_version.minor,
+			compile_version.patch);
+
+		SDL_Log("running with SDL_ttf version: %d.%d.%d\n",
+			link_version->major,
+			link_version->minor,
+			link_version->patch);
+
 		// Setup the viewport
 		//
 		SetupViewport();
@@ -113,42 +131,37 @@ namespace Engine
 		{
 		case SDL_SCANCODE_UP:
 			SDL_Log("Moviendo adelante");
-			
-			p1->setIsSpeedingUp();
+			Game1.getPlayer()->setIsSpeedingUp();
 			upArrow = true;
 			break;
 		case SDL_SCANCODE_LEFT:
 			SDL_Log("Rotando a la izquierda");
 			leftArrow = true;
-			
 			break;
 		case SDL_SCANCODE_DOWN:
-	
 			break;
 		case SDL_SCANCODE_RIGHT:
 			SDL_Log("Rotando a la derecha");
 			rightArrow = true;
-			
 			break;
 		case SDL_SCANCODE_D:
-			if (debugMode == false) {
-				SDL_Log("Modo de debug activado");
-				debugMode = true;
-			}
-			else if (debugMode == true) {
-				SDL_Log("Modo de debug desactivado");
-				debugMode = false;
+			Game1.SwitchDebugMode();
+				SDL_Log("Cambiando modo de debug");
+			break;
+		case SDL_SCANCODE_R:
+			SDL_Log("Reiniciando juego");
+			if (Game1.getPlayerStatus() == 0) {
+				Game1.RestartGame();
 			}
 			break;
 		case SDL_SCANCODE_KP_PLUS:
 			SDL_Log("Anadiendo asteroide");
-			asteroids.push_back(new Asteroid(m_width, m_height,large));
+			Game1.AddAsteroid();
 			break;
 		case SDL_SCANCODE_KP_MINUS:
-			if (asteroids.size()>0) {
+			Game1.EliminateAsteroid();
 				SDL_Log("Eliminando asteroide");
-				asteroids.pop_back();
-			}
+				
 			break;
 		case SDL_SCANCODE_SPACE:
 			SDL_Log("Disparando");
@@ -176,10 +189,10 @@ namespace Engine
 
 		case SDL_SCANCODE_UP:
 			upArrow = false;
-			p1->StopThrust();
+			Game1.getPlayer()->StopThrust();
 			break;
 		case SDL_SCANCODE_LEFT:
-			SDL_Log("Rotando a la izquierda");
+		
 			leftArrow = false;
 			
 			break;
@@ -187,12 +200,10 @@ namespace Engine
 			
 			break;
 		case SDL_SCANCODE_RIGHT:
-			SDL_Log("Rotando a la derecha");
 			rightArrow = false;
 			
 			break;
 		case SDL_SCANCODE_SPACE:
-			SDL_Log("Disparando");
 			spaceBar = false;
 			break;
 		case SDL_SCANCODE_ESCAPE:
@@ -206,6 +217,67 @@ namespace Engine
 		}
 	}
 
+	unsigned int power_two_floor(unsigned int val) {
+		unsigned int power = 2, nextVal = power * 2;
+		while ((nextVal *= 2) <= val)
+			power *= 2;
+		return power * 2;
+	}
+
+	
+
+	void RenderText(std::string message, SDL_Color color, float x, float y)
+	{
+		glLoadIdentity();
+		glTranslatef(x, y, 0.f);
+
+		SDL_Surface *surface;
+
+		//Render font to a SDL_Surface
+		if ((surface = TTF_RenderText_Blended(m_font, message.c_str(), color)) == nullptr) {
+			TTF_CloseFont(m_font);
+			std::cout << "TTF_RenderText error: " << std::endl;
+			return;
+		}
+
+		GLuint texId;
+
+		//Generate OpenGL texture
+		glEnable(GL_TEXTURE_2D);
+		glGenTextures(1, &texId);
+		glBindTexture(GL_TEXTURE_2D, texId);
+
+		//Avoid mipmap filtering
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+		//Find the first power of two for OpenGL image 
+		int w = power_two_floor(surface->w) * 2;
+		int h = power_two_floor(surface->h) * 2;
+
+		//Create a surface to the correct size in RGB format, and copy the old image
+		SDL_Surface * s = SDL_CreateRGBSurface(0, w, h, 32, 0x00ff0000, 0x0000ff00, 0x000000ff, 0xff000000);
+
+		SDL_BlitSurface(surface, NULL, s, NULL);
+
+		//Copy the created image into OpenGL format
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, w, h, 0, GL_BGRA, GL_UNSIGNED_BYTE, s->pixels);
+
+		//Draw the OpenGL texture as a Quad
+		glBegin(GL_QUADS); {
+			glTexCoord2d(0, 1); glVertex3f(0, 0, 0);
+			glTexCoord2d(1, 1); glVertex3f(0 + surface->w, 0, 0);
+			glTexCoord2d(1, 0); glVertex3f(0 + surface->w, 0 + surface->h, 0);
+			glTexCoord2d(0, 0); glVertex3f(0, 0 + surface->h, 0);
+		} glEnd();
+		glDisable(GL_TEXTURE_2D);
+
+		//Cleanup
+		SDL_FreeSurface(s);
+		SDL_FreeSurface(surface);
+		glDeleteTextures(1, &texId);
+	}
+
 	void App::Update()
 	{
 		double startTime = m_timer->GetElapsedTimeInSeconds();
@@ -214,73 +286,30 @@ namespace Engine
 		//
 		
 		if (upArrow)
-			p1->MoveForward();
+			Game1.getPlayer()->MoveForward();
 		if (leftArrow)
-			p1->RotateLeft();
+			Game1.getPlayer()->RotateLeft();
 		if (rightArrow)
-			p1->RotateRight();
+			Game1.getPlayer()->RotateRight();
 		if (spaceBar) {
-			if (bullets.size()<3  ) {
-				bullets.push_back(p1->shoot());
-			}
+			Game1.ShotABullet();
 			spaceBar = false;
 		}
 		
-		p1->Update(frameDeltaTime);
+		Game1.UpdateGame(frameDeltaTime);
 
-		for (int i = 0; i < asteroids.size(); i++) {
-			asteroids[i]->Update(frameDeltaTime);
-		}
 
-		std::vector <Bullet*> activeBullets;
-		for (auto bullet : bullets) {
-			bullet->Update(frameDeltaTime );
-			if (debugMode) {
-				bullet->drawCircle();
-			}
-			if (!bullet->IsActive()) activeBullets.push_back(bullet);
-		}
-
-		bullets = activeBullets;
-
-		if (!debugMode) {
-			for (int i = 0; i < asteroids.size(); i++) {
-				for (int j = 0; j < bullets.size(); j++) {
-					if (asteroids[i]->checkCollision(bullets[j])) {
-						if (asteroids[i]->getSize() == 'l') {
-							asteroids[i]->setSize('m');
-							bullets.erase(bullets.begin() + j);
-							Vector2 pos = asteroids[i]->getPosition();
-							asteroids.insert(asteroids.begin() + (i), new Asteroid(m_width, m_height, medium) );
-							asteroids[i]->setPosition(pos);
+		Game1.CheckAllCollisions();
+		
+		//RenderText("#Ay!", color)
 	
-						}
-						else if (asteroids[i]->getSize() == 'm') {
-							asteroids[i]->setSize('s');
-							bullets.erase(bullets.begin() + j);
-							Vector2 pos = asteroids[i]->getPosition();
-							asteroids.insert(asteroids.begin() + (i), new Asteroid(m_width, m_height, smalll));
-							asteroids[i]->setPosition(pos);
-							
-						}
-						else if (asteroids[i]->getSize() == 's') {
-							bullets.erase(bullets.begin() + j);
-							asteroids.erase(asteroids.begin() + i);
-						}
-					}
-				}
-				
-				if (asteroids[i]->checkCollision(p1)) {
-					delete p1;
-				}
-			}
-		}
 
 		double endTime = m_timer->GetElapsedTimeInSeconds();
 		double nextTimeFrame = startTime + DESIRED_FRAME_TIME;
 
 		frameDeltaTime = DESIRED_FRAME_TIME - ( endTime - startTime);
 		createFrameRate();
+
 		while (endTime < nextTimeFrame)
 		{
 			// Spin lock
@@ -301,23 +330,30 @@ namespace Engine
 		glClearColor(background.midnightBlue.R, background.midnightBlue.G, background.midnightBlue.B, 1.0);
 		glClear(GL_COLOR_BUFFER_BIT);
 		
-		p1->Render();
-		
-		for (int i = 0; i < asteroids.size(); i++) {
-			asteroids[i]->Render();
+		Game1.RenderGame();
+		Game1.DrawCircles();
+
+		SDL_Color rojo;
+		rojo.r = 0;
+		rojo.g = 0;
+		rojo.b = 0;
+		rojo.a = 0;
+
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glClearColor(1.0, 0.0, 0.0, 0.0);
+		RenderText(std::to_string(Game1.getScore()), rojo, -500.0, 200.0);
+		if (Game1.getPlayerStatus()==false) {
+			RenderText("GAME OVER", rojo, -100.0, -25.0);
+			RenderText("Press R to play again   -  Press ESC to exit", rojo, -380.0, -100.0);
 		}
-		if (debugMode) {
-			p1->drawCircle();
-			for (int i = 0; i < asteroids.size(); i++) {
-				asteroids[i]->drawCircle();
-				p1->drawLines(asteroids[i]);
-			}
-		}
+
+
+
+
 		if (showFrame) {
 			createFrameRateGraph();
 		}
-
-		for (auto bullet : bullets) bullet->Render();
 
 		SDL_GL_SwapWindow(m_mainWindow);
 	}
@@ -422,10 +458,12 @@ namespace Engine
 	void App::createFrameRateGraph() {
 		glLoadIdentity();
 		glTranslatef(150.0, -250.0, 0.0);
-		glBegin(GL_LINE_LOOP);
+		
+	
+		glBegin(GL_LINE_STRIP);
 		glColor3f(1.0, 0.0, 1.0);
 		for (int i = 0; i < maxFrames; i++) {
-			glVertex2f(frames[i].x *15.0f, (DESIRED_FRAME_TIME - frames[i].y )* 80000.0f);
+			glVertex2f(frames[i].x *15.0f, (DESIRED_FRAME_TIME - frames[i].y )* 25000.0f);
 			}
 		glEnd();
 
@@ -439,14 +477,7 @@ namespace Engine
 		//
 		m_width = width;
 		m_height = height;
-		p1->resizeWidthAndHeight(m_width, m_height);
-		for (int i = 0; i < asteroids.size(); i++) {
-			asteroids[i]->resizeWidthAndHeight(m_width, m_height);
-		}
-		
-		for (int i = 0; i < bullets.size(); i++) {
-			bullets[i]->resizeWidthAndHeight(m_width, m_height);
-		}
+		Game1.ResizeWidthAndHeight(m_width, m_height);
 	
 		SetupViewport();
 	}

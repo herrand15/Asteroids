@@ -2,7 +2,6 @@
 #include "MathUtilities.h"
 
 
-
 const float MAX_SPEED = 400;
 const float FRICTION = 0.99f;
 const float breakAway = 8.5f;
@@ -50,6 +49,10 @@ void Player::RotateRight() {
 
 void Player::setIsSpeedingUp() {
   isSpeedingUp = true;
+}
+
+void Player::setPosition(Vector2 pos) {
+	position = pos;
 }
 
 void Player::drawShip() {
@@ -119,7 +122,6 @@ void Player::Update(float timeDiff) {
 
 	Entity::Update(timeDiff);
 
-
 	if (!isSpeedingUp) velocity =  velocity* FRICTION;
 
 }
@@ -138,7 +140,7 @@ void Player::drawLines(Asteroid* asteroid_) {
 	glRotatef(0.0, 0.0, 0.0, 1.0);
 	float distance = sqrt(((position.x - asteroid_->getPosition().x)*(position.x - asteroid_->getPosition().x)) + ((position.y - asteroid_->getPosition().y)*(position.y - asteroid_->getPosition().y)));
 
-	if (distance < 475) {
+	if (distance < 400) {
 		glColor3f(1.0, 0.0, 0.0);
 		glBegin(GL_LINE_STRIP);
 		glVertex2f(position.x, position.y);

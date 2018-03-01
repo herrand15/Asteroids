@@ -7,7 +7,7 @@
 #include "Bullet.h"
 #include "asteroid.h"
 #include "SDLEvent.hpp"
-#include <SDL2/SDL_opengl.h>
+#include <SDL_opengl.h>
 
 
 class Player : public Entity {
@@ -15,7 +15,6 @@ private:
 	bool isSpeedingUp; //check if the ship is moving
 	Vector2 shipPoints[4];
 	Vector2 thrusterPoints[8];
-	
 
 public:
 
@@ -29,6 +28,7 @@ public:
 	void drawLines(Asteroid* asteroid_);
 
 	void setIsSpeedingUp(); 
+	void setPosition(Vector2);
 	void acceleration(Vector2 impulse);
 	void StopThrust();
 	Vector2 getPosition();

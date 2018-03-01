@@ -8,7 +8,6 @@
     <ClCompile Include="stb_image.c" />
     <ClCompile Include="ColorRepresentation.cpp" />
     <ClCompile Include="MathUtilities.cpp" />
-    <ClCompile Include="Color.cpp" />
     <ClCompile Include="_vector2.cpp">
       <Filter>Engine\Source files</Filter>
     </ClCompile>
@@ -28,6 +27,12 @@
       <Filter>Engine\Source files</Filter>
     </ClCompile>
     <ClCompile Include="Bullet.cpp">
+      <Filter>Engine\Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="Color.cpp">
+      <Filter>Engine\Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="Game.cpp">
       <Filter>Engine\Source files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -59,6 +64,9 @@
     <ClInclude Include="Bullet.h">
       <Filter>Engine\Header files</Filter>
     </ClInclude>
+    <ClInclude Include="Game.h">
+      <Filter>Engine\Header files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Engine">
@@ -70,5 +78,8 @@
     <Filter Include="Engine\Header files">
       <UniqueIdentifier>{da8cc683-e66e-46b9-be58-7d0e16e23f76}</UniqueIdentifier>
     </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="Hyperspace.ttf" />
   </ItemGroup>
 </Project>

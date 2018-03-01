@@ -6,7 +6,7 @@
 #include "Entity.h"
 #include "Bullet.h"
 #include "SDLEvent.hpp"
-#include <SDL2/SDL_opengl.h>
+#include <SDL_opengl.h>
 
 class Asteroid : public Entity {
 private:

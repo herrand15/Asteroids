@@ -11,9 +11,7 @@
 #include "SDLEvent.hpp"
 #include "TimeManager.hpp"
 #include <GL/glew.h>
-#include"Player.h"
-#include"asteroid.h"
-#include "Bullet.h"
+#include"Game.h"
 #include <vector>
 namespace Engine
 {
@@ -72,9 +70,8 @@ namespace Engine
 		SDL_GLContext						m_context;
 		GameState::State					m_state;
 		Engine::TimeManager*				m_timer;
-		Player*								p1;
-		std::vector<Asteroid*>              asteroids;
-		std::vector<Bullet*>                bullets;
+
+		Game								Game1;
 		float                               frameDeltaTime;
 		Vector2								frames[20];
 		int                               framePosition;
@@ -87,7 +84,6 @@ namespace Engine
 		bool								leftArrow ;
 		bool								rightArrow;
 		bool								spaceBar;
-		bool								debugMode;
 		bool								showFrame;
 	};
 }

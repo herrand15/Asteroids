@@ -5,7 +5,7 @@
 
 #include "_vector2.h"
 #include "Entity.h"
-#include <SDL2/SDL_opengl.h>
+#include <SDL_opengl.h>
 
 
 const int maxActiveTime = 70;

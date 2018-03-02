@@ -9,6 +9,9 @@
 #include "Bullet.hpp"
 #include "TextRenderizing.hpp"
 #include <ctime>
+#include <irrKlang.h>
+#include <ik_irrKlangTypes.h>
+
 
 
 class Game {
@@ -29,6 +32,7 @@ private:
 	TextRenderizing                 userFeedBackMessages;
 	bool debugMode;
 	bool isPlayerAlive;
+	irrklang::ISoundEngine *SoundEngine;
 
 public:
 	//********* FUNCTIONS ************

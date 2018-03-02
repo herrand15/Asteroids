@@ -29,6 +29,9 @@ Game::Game(int width_, int height_) {
 	addALife = false;
 	pointsUntillAddingLife = 2000;
 	getting2000MorePointsCounter = 0;
+
+	SoundEngine = irrklang::createIrrKlangDevice();
+	SoundEngine->setSoundVolume(1.0f);
 }
 
 bool Game::CheckCollisionsWithBullets(Asteroid* asteroid) {
@@ -154,6 +157,7 @@ void Game::ShotABullet() {
 	if (isPlayerAlive) {
 		if (bullets.size() < 10) {
 			bullets.push_back(p1->shoot());
+			SoundEngine->play2D("Fire.wav");
 		}
 	}
 }
@@ -230,8 +234,6 @@ void Game::drawScore() {
 	black.g = 0;
 	black.b = 0;
 	black.a = 0;
-
-
 	
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

@@ -8,10 +8,10 @@
 
 
 // Asteroids
-#include "SDLEvent.hpp"
+#include "IncludeSDL.hpp"
 #include "TimeManager.hpp"
-#include <GL/glew.h>
-#include"Game.h"
+#include"Game.hpp"
+#include "TextRenderizing.hpp"
 #include <vector>
 namespace Engine
 {
@@ -71,10 +71,12 @@ namespace Engine
 		GameState::State					m_state;
 		Engine::TimeManager*				m_timer;
 
-		Game								Game1;
+		Game								GameAsteroids;
 		float                               frameDeltaTime;
 		Vector2								frames[20];
 		int                               framePosition;
+		TextRenderizing*                   ShowText;
+
 
 		char								smalll;
 		char								medium;

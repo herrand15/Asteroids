@@ -3,8 +3,8 @@
 #ifndef BULLET_H_INCLUDED
 #define BULLET_H_INCLUDED
 
-#include "_vector2.h"
-#include "Entity.h"
+#include "_vector2.hpp"
+#include "Entity.hpp"
 #include <SDL_opengl.h>
 
 

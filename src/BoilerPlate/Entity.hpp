@@ -2,8 +2,8 @@
 #ifndef ENTITY_H_INCLUDED
 #define ENTITY_H_INCLUDED
 
-#include "_vector2.h"
-#include <SDL_opengl.h>
+#include "_vector2.hpp"
+#include "IncludeSDL.hpp"
 
 	class Entity
 	{

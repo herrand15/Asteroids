@@ -1,4 +1,4 @@
-#include "Entity.h"
+#include "Entity.hpp"
 
 	float Entity::Warp(float position, float maxP, float minP) {
 		if (position < minP) {

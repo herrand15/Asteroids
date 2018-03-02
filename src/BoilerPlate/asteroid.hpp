@@ -2,10 +2,10 @@
 #ifndef ASTEROID_H_INCLUDED
 #define ASTEROID_H_INCLUDED
 
-#include "_vector2.h"
-#include "Entity.h"
-#include "Bullet.h"
-#include "SDLEvent.hpp"
+#include "_vector2.hpp"
+#include "Entity.hpp"
+#include "Bullet.hpp"
+#include "SDLEvent.h"
 #include <SDL_opengl.h>
 
 class Asteroid : public Entity {

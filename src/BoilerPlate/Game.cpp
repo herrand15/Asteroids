@@ -1,4 +1,4 @@
-#include "Game.h"
+#include "Game.hpp"
 
 const char smalll = 's';
 const char medium = 'm';
@@ -23,6 +23,9 @@ Game::Game(int width_, int height_) {
 	playerDeadTime = 0;
 	score = 0;
 	lives = 3;
+	addALife = false;
+	pointsUntillAddingLife = 2000;
+	getting2000MorePointsCounter = 0;
 }
 
 bool Game::CheckCollisionsWithBullets(Asteroid* asteroid) {
@@ -81,6 +84,7 @@ void Game::CheckAllCollisions() {
 		}
 		asteroids = aliveAsteroids;
 	}
+
 }
 
 
@@ -100,6 +104,7 @@ void Game::RestartGame() {
 	lives = 3;
 	score = 0;
 	wave = 1;
+	pointsUntillAddingLife = 3000;
 
 }
 
@@ -134,9 +139,9 @@ void Game::showPlayerLives() {
 	int distance = 0;
 	for (int i = 0; i < lives; i++) {
 		glLoadIdentity();
-		glTranslatef((-width/2)+48+distance, (height/2)-30, 0.0);
+		glTranslatef((width/2)-48+distance, (height/2)-30, 0.0);
 		drawPlayerLives();
-		distance += 50;
+		distance -= 50;
 	}
 	
 }
@@ -203,6 +208,14 @@ void Game::UpdateGame(float deltaTime) {
 	}
 	else {
 		playerDeadTime++;
+	}
+
+	
+	if (score > pointsUntillAddingLife + (getting2000MorePointsCounter*2000)) {
+		getting2000MorePointsCounter++;
+		addALife = true;
+		if(addALife = true) lives++;
+		addALife = false;
 	}
 
 

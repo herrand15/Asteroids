@@ -1,4 +1,4 @@
-#include "ColorRepresentation.h"
+#include "ColorRepresentation.hpp"
 
 ColorRepresentation::ColorRepresentation() {
 	red = Color(1.0, 0.0, 0.0, 1.0);

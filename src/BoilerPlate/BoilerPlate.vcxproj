@@ -195,6 +195,7 @@ copy /Y "$(SolutionDir)\Externals\SDL2_ttf-2.0.14\lib\x64\zlib1.dll" "$(TargetDi
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="SDLEvent.cpp" />
     <ClCompile Include="stb_image.c" />
+    <ClCompile Include="TextRenderizing.cpp" />
     <ClCompile Include="TimeManager.cpp" />
     <ClCompile Include="_vector2.cpp" />
     <ClCompile Include="_vector3.cpp" />
@@ -202,19 +203,21 @@ copy /Y "$(SolutionDir)\Externals\SDL2_ttf-2.0.14\lib\x64\zlib1.dll" "$(TargetDi
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.hpp" />
-    <ClInclude Include="asteroid.h" />
-    <ClInclude Include="Bullet.h" />
+    <ClInclude Include="asteroid.hpp" />
+    <ClInclude Include="Bullet.hpp" />
     <ClInclude Include="Color.h" />
-    <ClInclude Include="ColorRepresentation.h" />
-    <ClInclude Include="Entity.h" />
-    <ClInclude Include="Game.h" />
-    <ClInclude Include="MathUtilities.h" />
-    <ClInclude Include="Player.h" />
-    <ClInclude Include="SDLEvent.hpp" />
+    <ClInclude Include="ColorRepresentation.hpp" />
+    <ClInclude Include="Entity.hpp" />
+    <ClInclude Include="Game.hpp" />
+    <ClInclude Include="IncludeSDL.hpp" />
+    <ClInclude Include="MathUtilities.hpp" />
+    <ClInclude Include="Player.hpp" />
+    <ClInclude Include="SDLEvent.h" />
+    <ClInclude Include="TextRenderizing.hpp" />
     <ClInclude Include="TimeManager.hpp" />
-    <ClInclude Include="_vector2.h" />
-    <ClInclude Include="_vector3.h" />
-    <ClInclude Include="_vector4.h" />
+    <ClInclude Include="_vector2.hpp" />
+    <ClInclude Include="_vector3.hpp" />
+    <ClInclude Include="_vector4.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Font Include="Hyperspace.ttf" />

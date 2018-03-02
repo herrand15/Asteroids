@@ -1,5 +1,5 @@
-#include "Player.h"
-#include "MathUtilities.h"
+#include "Player.hpp"
+#include "MathUtilities.hpp"
 
 
 const float MAX_SPEED = 400;

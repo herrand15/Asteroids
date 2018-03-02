@@ -1,13 +1,13 @@
 #include "App.hpp"
 #include <iostream>
 #include <algorithm>
-#include "ColorRepresentation.h"
+#include "ColorRepresentation.hpp"
 // OpenGL includes
-#include <SDL_opengl.h>
-#include <SDL_ttf.h>
 
-#include "_vector2.h"
+
+#include "_vector2.hpp"
 #include <string>
+
 
 namespace Engine
 {
@@ -37,8 +37,7 @@ namespace Engine
 		smalll = 's';
 		medium = 'm';
 
-		Game1 = Game(m_width, m_height);
-
+		GameAsteroids = Game(m_width, m_height);
 		
 		for (int i = 0; i < maxFrames; i++) {
 			frames[i] = Vector2((float)i, 0.0f);
@@ -47,8 +46,6 @@ namespace Engine
 		frameDeltaTime = DESIRED_FRAME_RATE;
 		
 	}
-
-	TTF_Font*  m_font;
 	
 	
 	App::~App()
@@ -86,6 +83,8 @@ namespace Engine
 	{
 		// Init the external dependencies
 		//
+
+		ShowText->Init();
 		bool success = SDLInit() && GlewInit();
 		if (!success)
 		{
@@ -93,25 +92,8 @@ namespace Engine
 			return false;
 		}
 
-		if (TTF_Init() == -1) {
-			SDL_Log("TTF_Init: %s\n", TTF_GetError());
-			return false;
-		}
-		m_font = TTF_OpenFont("Hyperspace.ttf", 50);
-
-		SDL_version compile_version;
-		const SDL_version *link_version = TTF_Linked_Version();
-		SDL_TTF_VERSION(&compile_version);
-
-		SDL_Log("compiled with SDL_ttf version: %d.%d.%d\n",
-			compile_version.major,
-			compile_version.minor,
-			compile_version.patch);
-
-		SDL_Log("running with SDL_ttf version: %d.%d.%d\n",
-			link_version->major,
-			link_version->minor,
-			link_version->patch);
+		
+		
 
 		// Setup the viewport
 		//
@@ -131,7 +113,7 @@ namespace Engine
 		{
 		case SDL_SCANCODE_UP:
 			SDL_Log("Moviendo adelante");
-			Game1.getPlayer()->setIsSpeedingUp();
+			GameAsteroids.getPlayer()->setIsSpeedingUp();
 			upArrow = true;
 			break;
 		case SDL_SCANCODE_LEFT:
@@ -145,21 +127,21 @@ namespace Engine
 			rightArrow = true;
 			break;
 		case SDL_SCANCODE_D:
-			Game1.SwitchDebugMode();
+			GameAsteroids.SwitchDebugMode();
 				SDL_Log("Cambiando modo de debug");
 			break;
 		case SDL_SCANCODE_R:
 			SDL_Log("Reiniciando juego");
-			if (Game1.getPlayerStatus() == 0) {
-				Game1.RestartGame();
+			if (GameAsteroids.getPlayerStatus() == 0) {
+				GameAsteroids.RestartGame();
 			}
 			break;
 		case SDL_SCANCODE_KP_PLUS:
 			SDL_Log("Anadiendo asteroide");
-			Game1.AddAsteroid();
+			GameAsteroids.AddAsteroid();
 			break;
 		case SDL_SCANCODE_KP_MINUS:
-			Game1.EliminateAsteroid();
+			GameAsteroids.EliminateAsteroid();
 				SDL_Log("Eliminando asteroide");
 				
 			break;
@@ -189,7 +171,7 @@ namespace Engine
 
 		case SDL_SCANCODE_UP:
 			upArrow = false;
-			Game1.getPlayer()->StopThrust();
+			GameAsteroids.getPlayer()->StopThrust();
 			break;
 		case SDL_SCANCODE_LEFT:
 		
@@ -217,66 +199,7 @@ namespace Engine
 		}
 	}
 
-	unsigned int power_two_floor(unsigned int val) {
-		unsigned int power = 2, nextVal = power * 2;
-		while ((nextVal *= 2) <= val)
-			power *= 2;
-		return power * 2;
-	}
-
 	
-
-	void RenderText(std::string message, SDL_Color color, float x, float y)
-	{
-		glLoadIdentity();
-		glTranslatef(x, y, 0.f);
-
-		SDL_Surface *surface;
-
-		//Render font to a SDL_Surface
-		if ((surface = TTF_RenderText_Blended(m_font, message.c_str(), color)) == nullptr) {
-			TTF_CloseFont(m_font);
-			std::cout << "TTF_RenderText error: " << std::endl;
-			return;
-		}
-
-		GLuint texId;
-
-		//Generate OpenGL texture
-		glEnable(GL_TEXTURE_2D);
-		glGenTextures(1, &texId);
-		glBindTexture(GL_TEXTURE_2D, texId);
-
-		//Avoid mipmap filtering
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-
-		//Find the first power of two for OpenGL image 
-		int w = power_two_floor(surface->w) * 2;
-		int h = power_two_floor(surface->h) * 2;
-
-		//Create a surface to the correct size in RGB format, and copy the old image
-		SDL_Surface * s = SDL_CreateRGBSurface(0, w, h, 32, 0x00ff0000, 0x0000ff00, 0x000000ff, 0xff000000);
-
-		SDL_BlitSurface(surface, NULL, s, NULL);
-
-		//Copy the created image into OpenGL format
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, w, h, 0, GL_BGRA, GL_UNSIGNED_BYTE, s->pixels);
-
-		//Draw the OpenGL texture as a Quad
-		glBegin(GL_QUADS); {
-			glTexCoord2d(0, 1); glVertex3f(0, 0, 0);
-			glTexCoord2d(1, 1); glVertex3f(0 + surface->w, 0, 0);
-			glTexCoord2d(1, 0); glVertex3f(0 + surface->w, 0 + surface->h, 0);
-			glTexCoord2d(0, 0); glVertex3f(0, 0 + surface->h, 0);
-		} glEnd();
-		glDisable(GL_TEXTURE_2D);
-
-		//Cleanup
-		SDL_FreeSurface(s);
-		SDL_FreeSurface(surface);
-		glDeleteTextures(1, &texId);
-	}
 
 	void App::Update()
 	{
@@ -286,20 +209,20 @@ namespace Engine
 		//
 		
 		if (upArrow)
-			Game1.getPlayer()->MoveForward();
+			GameAsteroids.getPlayer()->MoveForward();
 		if (leftArrow)
-			Game1.getPlayer()->RotateLeft();
+			GameAsteroids.getPlayer()->RotateLeft();
 		if (rightArrow)
-			Game1.getPlayer()->RotateRight();
+			GameAsteroids.getPlayer()->RotateRight();
 		if (spaceBar) {
-			Game1.ShotABullet();
+			GameAsteroids.ShotABullet();
 			spaceBar = false;
 		}
 		
-		Game1.UpdateGame(frameDeltaTime);
+		GameAsteroids.UpdateGame(frameDeltaTime);
 
 
-		Game1.CheckAllCollisions();
+		GameAsteroids.CheckAllCollisions();
 		
 		//RenderText("#Ay!", color)
 	
@@ -327,30 +250,17 @@ namespace Engine
 	void App::Render()
 	{
 		ColorRepresentation background;
-		glClearColor(background.midnightBlue.R, background.midnightBlue.G, background.midnightBlue.B, 1.0);
+		glClearColor(background.midnightBlue.R, background.midnightBlue.G, background.midnightBlue.B, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 		
-		Game1.RenderGame();
-		Game1.DrawCircles();
+		GameAsteroids.RenderGame();
+		GameAsteroids.DrawCircles();
+		ShowText = new TextRenderizing(m_width, m_height);
 
-		SDL_Color rojo;
-		rojo.r = 0;
-		rojo.g = 0;
-		rojo.b = 0;
-		rojo.a = 0;
-
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		glClearColor(1.0, 0.0, 0.0, 0.0);
-		RenderText(std::to_string(Game1.getScore()), rojo, -500.0, 200.0);
-		if (Game1.getPlayerStatus()==false) {
-			RenderText("GAME OVER", rojo, -100.0, -25.0);
-			RenderText("Press R to play again   -  Press ESC to exit", rojo, -380.0, -100.0);
+		ShowText->drawScore(GameAsteroids.getScore());
+		if (!GameAsteroids.getPlayerStatus()) {
+			ShowText->drawEndGameMessage();
 		}
-
-
-
-
 		if (showFrame) {
 			createFrameRateGraph();
 		}
@@ -477,7 +387,7 @@ namespace Engine
 		//
 		m_width = width;
 		m_height = height;
-		Game1.ResizeWidthAndHeight(m_width, m_height);
+		GameAsteroids.ResizeWidthAndHeight(m_width, m_height);
 	
 		SetupViewport();
 	}

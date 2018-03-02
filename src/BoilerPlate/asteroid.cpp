@@ -1,5 +1,5 @@
-#include "asteroid.h"
-#include "MathUtilities.h"
+#include "asteroid.hpp"
+#include "MathUtilities.hpp"
 #include <cstdlib>
 #include <ctime>
 using namespace std;

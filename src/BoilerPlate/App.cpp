@@ -26,7 +26,7 @@ namespace Engine
 	{
 		
 		m_state = GameState::UNINITIALIZED;
-		m_lastFrameTime = m_timer->GetElapsedTimeInSeconds();
+		m_lastFrameTime = m_timer->getElapsedTimeInSeconds();
 
 		upArrow = false;
 		leftArrow = false;
@@ -94,7 +94,7 @@ namespace Engine
 		
 		
 
-		// Setup the viewport
+		// setup the viewport
 		//
 		SetupViewport();
 
@@ -135,11 +135,11 @@ namespace Engine
 				GameAsteroids.RestartGame();
 			}
 			break;
-		case SDL_SCANCODE_KP_PLUS:
+		case SDL_SCANCODE_A:
 			SDL_Log("Anadiendo asteroide");
 			GameAsteroids.AddAsteroid();
 			break;
-		case SDL_SCANCODE_KP_MINUS:
+		case SDL_SCANCODE_S:
 			GameAsteroids.EliminateAsteroid();
 				SDL_Log("Eliminando asteroide");
 				
@@ -202,7 +202,7 @@ namespace Engine
 
 	void App::Update()
 	{
-		double startTime = m_timer->GetElapsedTimeInSeconds();
+		double startTime = m_timer->getElapsedTimeInSeconds();
 
 		// Update code goes here
 		//
@@ -226,21 +226,21 @@ namespace Engine
 		//RenderText("#Ay!", color)
 	
 
-		double endTime = m_timer->GetElapsedTimeInSeconds();
+		double endTime = m_timer->getElapsedTimeInSeconds();
 		double nextTimeFrame = startTime + DESIRED_FRAME_TIME;
 
-		frameDeltaTime = DESIRED_FRAME_TIME - ( endTime - startTime);
+		frameDeltaTime =(DESIRED_FRAME_TIME - ( (float)endTime - (float)startTime));
 		createFrameRate();
 
 		while (endTime < nextTimeFrame)
 		{
 			// Spin lock
-			endTime = m_timer->GetElapsedTimeInSeconds();
+			endTime = m_timer->getElapsedTimeInSeconds();
 		}
 
 		double elapsedTime = endTime - startTime;        
 
-		m_lastFrameTime = m_timer->GetElapsedTimeInSeconds();
+		m_lastFrameTime = m_timer->getElapsedTimeInSeconds();
 
 		m_nUpdates++;
 		
@@ -249,15 +249,15 @@ namespace Engine
 	void App::Render()
 	{
 		ColorRepresentation background;
-		glClearColor(background.midnightBlue.R, background.midnightBlue.G, background.midnightBlue.B, 1.0f);
+		glClearColor((float)background.midnightBlue.R, (float)background.midnightBlue.G, (float)background.midnightBlue.B, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 		
 		GameAsteroids.RenderGame();
 		GameAsteroids.DrawCircles();
 
-		GameAsteroids.drawScore();
+		GameAsteroids.DrawScore();
 		if (!GameAsteroids.getPlayerStatus()) {
-			GameAsteroids.drawEndGameMessage();
+			GameAsteroids.DrawEndGameMessage();
 		}
 		if (showFrame) {
 			createFrameRateGraph();
@@ -315,20 +315,20 @@ namespace Engine
 		float halfWidth = m_width * 0.5f;
 		float halfHeight = m_height * 0.5f;
 
-		// Set viewport to match window
+		// set viewport to match window
 		//
 		glViewport(0, 0, m_width, m_height);
 
-		// Set Mode to GL_PROJECTION
+		// set Mode to GL_PROJECTION
 		//
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
 
-		// Set projection MATRIX to ORTHO
+		// set projection MATRIX to ORTHO
 		//
 		glOrtho(-halfWidth, halfWidth, -halfHeight, halfHeight, -1, 1);
 
-		// Setting Mode to GL_MODELVIEW
+		// setting Mode to GL_MODELVIEW
 		//
 		glMatrixMode(GL_MODELVIEW);
 	}

@@ -7,6 +7,7 @@
 #include "asteroid.hpp"
 #include "Player.hpp"
 #include "Bullet.hpp"
+#include "Saucer.hpp"
 #include "TextRenderizing.hpp"
 #include <ctime>
 #include <irrKlang.h>
@@ -28,11 +29,11 @@ private:
 	int								score;
 	int                             lives;
 	int								wave;
-	int								getting2000MorePointsCounter;
+	int								getting4500MorePointsCounter;
 	TextRenderizing                 userFeedBackMessages;
 	bool debugMode;
 	bool isPlayerAlive;
-	irrklang::ISoundEngine *SoundEngine;
+	irrklang::ISoundEngine *SoundEffects;
 
 public:
 	//********* FUNCTIONS ************
@@ -49,7 +50,7 @@ public:
 	
 	int	getPlayerStatus();
 	void RestartGame();
-	void drawPlayerLives();
+	void DrawPlayerLives();
 	void showPlayerLives();
 	void SpawnAsteroids();
 	void ShotABullet();
@@ -58,8 +59,8 @@ public:
 	void SwitchDebugMode();
 	void DrawCircles();
 	void ResizeWidthAndHeight(int width_, int height_);
-	void drawScore();
-	void drawEndGameMessage();
+	void DrawScore();
+	void DrawEndGameMessage();
 
 	void UpdateGame(float deltaTime);
 	void RenderGame();

@@ -17,7 +17,7 @@ private:
 
 public:
 	Asteroid(int width_, int height_, char size_); 
-	void drawAsteroid();
+	void DrawAsteroid();
 	char getSize();
 	bool checkCollision(Entity* gameEntity);
 	void setSize(char size_);

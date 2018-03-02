@@ -11,10 +11,12 @@ TextRenderizing::TextRenderizing(int width_ , int height_) {
 TextRenderizing::TextRenderizing(){}
 
 bool TextRenderizing::Init() {
+	bool returnValue = true;
 	if (TTF_Init() == -1) {
 		SDL_Log("TTF_Init: %s\n", TTF_GetError());
-		return false;
+		returnValue = false;
 	}
+	return returnValue;
 }
 
 
@@ -65,10 +67,10 @@ void TextRenderizing::RenderText(std::string message, SDL_Color color, float x, 
 
 	//Draw the OpenGL texture as a Quad
 	glBegin(GL_QUADS); {
-		glTexCoord2d(0, 1); glVertex3f(0, 0, 0);
-		glTexCoord2d(1, 1); glVertex3f(0 + surface->w, 0, 0);
-		glTexCoord2d(1, 0); glVertex3f(0 + surface->w, 0 + surface->h, 0);
-		glTexCoord2d(0, 0); glVertex3f(0, 0 + surface->h, 0);
+		glTexCoord2d((GLfloat)0.0, (GLfloat)1.0); glVertex3f((GLfloat)0, (GLfloat)0, (GLfloat)0);
+		glTexCoord2d((GLfloat)1.0, (GLfloat)1.0); glVertex3f((GLfloat)0 + (GLfloat)surface->w, (GLfloat)0, (GLfloat)0);
+		glTexCoord2d((GLfloat)1.0, (GLfloat)0.0); glVertex3f((GLfloat)0 + (GLfloat)surface->w, (GLfloat)0 + surface->h, (GLfloat)0);
+		glTexCoord2d((GLfloat)0.0, (GLfloat)0.0); glVertex3f((GLfloat)0, (GLfloat)0 + (GLfloat)surface->h, (GLfloat)0);
 	} glEnd();
 	glDisable(GL_TEXTURE_2D);
 

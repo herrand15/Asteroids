@@ -10,7 +10,7 @@
 		return position;
 	}
 
-	void Entity::resizeWidthAndHeight(float Widht, float Height) {
+	void Entity::resizeWidthAndHeight(int Widht, int Height) {
 		width = Widht;
 		height = Height;
 	}
@@ -18,7 +18,7 @@
 	
 	Entity::Entity() {};
 
-	Entity::Entity(float width_, float height_) {
+	Entity::Entity(int width_, int height_) {
 		width = width_;
 		height = height_;
 		directionAngle = 0.0f;
@@ -33,7 +33,7 @@
 	}
 
 
-	void Entity::drawCircle() {
+	void Entity::DrawCircle() {
 
 		int lines = 100;
 
@@ -59,8 +59,8 @@
 		position.y += velocity.y * timeDiff;
 
 		
-		position.x = Warp(position.x, width / 2, -width / 2);
-		position.y = Warp(position.y, height / 2, -height / 2);
+		position.x = (float)Warp(position.x, (float)width / 2, (float)-width / 2);
+		position.y = (float)Warp(position.y, (float)height / 2, (float)-height / 2);
 
 
 	}

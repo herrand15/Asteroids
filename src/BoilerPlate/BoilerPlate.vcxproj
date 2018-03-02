@@ -212,8 +212,6 @@ copy /Y "$(SolutionDir)\Externals\irrKlang-64bit-1.6.0\bin\winx64-visualStudio\i
     <ClCompile Include="TextRenderizing.cpp" />
     <ClCompile Include="TimeManager.cpp" />
     <ClCompile Include="_vector2.cpp" />
-    <ClCompile Include="_vector3.cpp" />
-    <ClCompile Include="_vector4.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.hpp" />
@@ -230,8 +228,6 @@ copy /Y "$(SolutionDir)\Externals\irrKlang-64bit-1.6.0\bin\winx64-visualStudio\i
     <ClInclude Include="TextRenderizing.hpp" />
     <ClInclude Include="TimeManager.hpp" />
     <ClInclude Include="_vector2.hpp" />
-    <ClInclude Include="_vector3.hpp" />
-    <ClInclude Include="_vector4.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Font Include="Hyperspace.ttf" />

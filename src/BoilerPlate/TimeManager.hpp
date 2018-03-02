@@ -32,10 +32,10 @@ namespace Engine
 
 		void    Start();
 		void    Stop();
-		double  GetElapsedTime();  // By default elapsed time is returned in seconds.
-		double  GetElapsedTimeInSeconds();  // Returns elapsed time in seconds.
-		double  GetElapsedTimeInMicroseconds();  // Returns elapsed time in microseconds.
-		double  GetElapsedTimeInMilliseconds();  // Returns elapsed time in milliseconds.
+		double  getElapsedTime();  // By default elapsed time is returned in seconds.
+		double  getElapsedTimeInSeconds();  // Returns elapsed time in seconds.
+		double  getElapsedTimeInMicroseconds();  // Returns elapsed time in microseconds.
+		double  getElapsedTimeInMilliseconds();  // Returns elapsed time in milliseconds.
 	private:
 		/* =============================================================
 		* MEMBERS

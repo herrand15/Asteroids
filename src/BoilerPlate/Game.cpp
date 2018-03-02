@@ -15,7 +15,7 @@ Game::Game(int width_, int height_) {
 	p1 = new Player(width_, height_);
 	wave = 1;
 	for (int i =0 ; i < 4+wave; i++) {
-		asteroids.push_back(new Asteroid(width_, height_, 'l'));
+		asteroids.push_back(new Asteroid(width_, height_, large));
 		}
 	userFeedBackMessages.Init();
 	userFeedBackMessages = TextRenderizing(width, height);
@@ -27,11 +27,12 @@ Game::Game(int width_, int height_) {
 	score = 0;
 	lives = 3;
 	addALife = false;
-	pointsUntillAddingLife = 2000;
-	getting2000MorePointsCounter = 0;
+	isPlayerAlive = true;
+	pointsUntillAddingLife = 4500;
+	getting4500MorePointsCounter = 0;
 
-	SoundEngine = irrklang::createIrrKlangDevice();
-	SoundEngine->setSoundVolume(1.0f);
+	SoundEffects = irrklang::createIrrKlangDevice();
+	SoundEffects->setSoundVolume(1.0f);
 }
 
 bool Game::CheckCollisionsWithBullets(Asteroid* asteroid) {
@@ -40,9 +41,8 @@ bool Game::CheckCollisionsWithBullets(Asteroid* asteroid) {
 	for (int i = 0; i < bullets.size(); i++) {
 		if (asteroid->checkCollision(bullets[i])) {
 			hasCollided = true;
-			if(asteroid->getSize()==smalll) score += 75;
-			else if (asteroid->getSize() == medium) score += 50;
-			else if (asteroid->getSize() == smalll) score += 25;
+			if(asteroid->getSize() ==smalll)score += 75;
+			SoundEffects->play2D("bangSmall.wav");
 		}
 		else aliveAsteroids.push_back(bullets[i]);
 	}
@@ -70,8 +70,8 @@ void Game::CheckAllCollisions() {
 				}
 				else if (asteroids[i]->getSize() == medium) {
 					Asteroid *division1 = asteroids[i];
-					division1->setSize(smalll);
 					score += 50;
+					division1->setSize(smalll);
 					Asteroid *division2 = new Asteroid(width, height, smalll);
 					Vector2 pos = division1->getPosition();
 					division2->setPosition(pos);
@@ -84,6 +84,7 @@ void Game::CheckAllCollisions() {
 
 			if (asteroids[i]->checkCollision(p1) && playerActiveTime>timeUntillPlayerCanDieOrRespawn) {
 				isPlayerAlive = false;
+				SoundEffects->play2D("bangLarge.wav");
 				playerActiveTime = 0;
 				lives -= 1;
 			}
@@ -120,7 +121,7 @@ int Game::getScore(){
 
 
 
-void Game::drawPlayerLives() {
+void Game::DrawPlayerLives() {
 	glColor3f(1.0, 0.0, 1.0);
 	glBegin(GL_POLYGON);
 	glVertex2f(0.0 * 10, -1.7 * 10);
@@ -145,8 +146,8 @@ void Game::showPlayerLives() {
 	int distance = 0;
 	for (int i = 0; i < lives; i++) {
 		glLoadIdentity();
-		glTranslatef((width/2)-48+distance, (height/2)-30, 0.0);
-		drawPlayerLives();
+		glTranslatef((GLfloat)(width/2)-48+distance, (GLfloat)(height/2)-30, 0.0);
+		DrawPlayerLives();
 		distance -= 50;
 	}
 	
@@ -157,7 +158,7 @@ void Game::ShotABullet() {
 	if (isPlayerAlive) {
 		if (bullets.size() < 10) {
 			bullets.push_back(p1->shoot());
-			SoundEngine->play2D("Fire.wav");
+			SoundEffects->play2D("Fire.wav");
 		}
 	}
 }
@@ -190,9 +191,11 @@ void Game::UpdateGame(float deltaTime) {
 		p1->Update(deltaTime);
 	}
 	if (asteroids.size() == 0) {
+		playerActiveTime = 0;
 		wave += 1;
 		SpawnAsteroids();
 	}
+
 
 	for (int i = 0; i < asteroids.size(); i++) {
 		asteroids[i]->Update(deltaTime);
@@ -218,17 +221,20 @@ void Game::UpdateGame(float deltaTime) {
 	}
 
 	
-	if (score > pointsUntillAddingLife + (getting2000MorePointsCounter*2000)) {
-		getting2000MorePointsCounter++;
+	if (score > pointsUntillAddingLife + (getting4500MorePointsCounter*4500)) {
+		getting4500MorePointsCounter++;
 		addALife = true;
-		if(addALife = true) lives++;
+		if (addALife = true) {
+			lives++;
+			SoundEffects->play2D("extraShip.wav");
+		}
 		addALife = false;
 	}
 
 
 }
 
-void Game::drawScore() {
+void Game::DrawScore() {
 	SDL_Color black;
 	black.r = 0;
 	black.g = 0;
@@ -237,12 +243,12 @@ void Game::drawScore() {
 	
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	userFeedBackMessages.RenderText(std::to_string(score), black, (width / 2) - 148, (height / 2) - 120);
+	userFeedBackMessages.RenderText(std::to_string(score), black, (float)(width / 2) - 148, (float)(height / 2) - 120);
 
 }
 
 
-void Game::drawEndGameMessage() {
+void Game::DrawEndGameMessage() {
 	SDL_Color black;
 	black.r = 0;
 	black.g = 0;
@@ -273,13 +279,13 @@ void Game::RenderGame() {
 
 void Game::DrawCircles() {
 	if (debugMode ==true) {
-		p1->drawCircle();
+		p1->DrawCircle();
 		for (auto bullet : bullets) {
-			bullet->drawCircle();
+			bullet->DrawCircle();
 		}
 		for (int i = 0; i < asteroids.size(); i++) {
-			asteroids[i]->drawCircle();
-			p1->drawLines(asteroids[i]);
+			asteroids[i]->DrawCircle();
+			p1->DrawLines(asteroids[i]);
 		}
 	}
 

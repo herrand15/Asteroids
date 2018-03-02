@@ -8,18 +8,18 @@ using namespace std;
 Asteroid::Asteroid(int width_, int height_, char size_) {
 	
 
-	position = Vector2((rand() % width_)-width_, (rand() %height_)-height_);
+	position = Vector2((float)(rand() % width_)-width_, (float)(rand() %height_)-height_);
 	height = height_;
 	width = width_;
 	direction = rand() % 360;
 	collided = false;
 	size = size_;
 	if (size == 's')
-		radius = 13.3;
+		radius = 13.3f;
 	if (size == 'm')
-		radius = 27.55;
+		radius = 27.55f;
 	if (size == 'l')
-		radius = 47.5;
+		radius = 47.5f;
 
 
 	asteroidPoints[0] = Vector2(-5.0f, 8.1f);
@@ -39,14 +39,14 @@ Asteroid::Asteroid(int width_, int height_, char size_) {
 
 
 
-void Asteroid::drawAsteroid() {
+void Asteroid::DrawAsteroid() {
 	glColor3f(0.5, 0.5, 0.5);
 	glBegin(GL_POLYGON);
 	switch (size) {
-		//this switch will take a char; 's' will draw a small asteroid, 'm' a medium one and 'l' a large one
+		//this switch will take a char; 's' will Draw a small asteroid, 'm' a medium one and 'l' a large one
 	case 's':
 		for (int i = 0; i < 13; i++) {
-			glVertex2f(asteroidPoints[i].x *1.4, asteroidPoints[i].y *1.4 );
+			glVertex2f(asteroidPoints[i].x *1.4f, asteroidPoints[i].y *1.4f );
 		}
 		Mass = 1.0;
 		break;
@@ -86,10 +86,10 @@ bool Asteroid::checkCollision(Entity* gameEntity) {
 	}
 	else{
 		if (size == 'l' && gameEntity->getRadius()!=23.50) {
-			radius = 27.55;
+			radius = 27.55f;
 		}
 		else if (size == 'm' && gameEntity->getRadius() != 23.50) {
-			radius = 13.3;
+			radius = 13.3f;
 		}
 		collided = true;
 		return true;
@@ -100,19 +100,19 @@ bool Asteroid::checkCollision(Entity* gameEntity) {
 
 void Asteroid::Update(float timeDiff)
 {
-	int currentSpeed;
+	float currentSpeed;
 	if (size == 's')
-		currentSpeed = 3.2;
+		currentSpeed = 3.2f;
 	if (size == 'm')
-		currentSpeed = 3.0;
+		currentSpeed = 3.0f;
 	if (size == 'l')
-		currentSpeed = 2.0;
+		currentSpeed = 2.0f;
 	
-	position.x += currentSpeed * cos(degreeToRadians(direction));
-	position.y += currentSpeed * sin(degreeToRadians(direction));
+	position.x += currentSpeed * cos(degreeToRadians((float)direction));
+	position.y += currentSpeed * sin(degreeToRadians((float)direction));
 
-	position.x = Warp(position.x, width / 2, -width / 2);
-	position.y = Warp(position.y, height / 2, -height / 2);
+	position.x = Warp(position.x, (float)width / 2, (float)-width / 2);
+	position.y = Warp(position.y, (float)height / 2, (float)-height / 2);
 
 	speed = velocity.calculateLength();
 
@@ -122,5 +122,5 @@ void Asteroid::Update(float timeDiff)
 void Asteroid::Render() {
 	glLoadIdentity();
 	glTranslatef(position.x, position.y, 0.0);
-	drawAsteroid();
+	DrawAsteroid();
 }

@@ -20,7 +20,7 @@ private:
 public:
 	Bullet(int width_, int height_);
 	bool IsActive();
-	void Actualize(Vector2 impulse, Vector2 position, int angle);
+	void Actualize(Vector2 impulse, Vector2 position, float angle);
 	void Update(float timeDiff);
 	void Render();
 };

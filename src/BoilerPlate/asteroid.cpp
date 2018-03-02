@@ -1,11 +1,12 @@
-#include "asteroid.h"
-#include "MathUtilities.h"
+#include "asteroid.hpp"
+#include "MathUtilities.hpp"
 #include <cstdlib>
 #include <ctime>
 using namespace std;
 
+
 Asteroid::Asteroid(int width_, int height_, char size_) {
-	srand(time(NULL));
+	
 
 	position = Vector2((rand() % width_)-width_, (rand() %height_)-height_);
 	height = height_;

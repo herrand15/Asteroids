@@ -1,5 +1,5 @@
-#include "Bullet.h"
-#include "MathUtilities.h"
+#include "Bullet.hpp"
+#include "MathUtilities.hpp"
 #include <math.h>
 
 Bullet::Bullet(int width_, int height_): Entity(width_,height_) {

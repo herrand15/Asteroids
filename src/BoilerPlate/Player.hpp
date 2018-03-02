@@ -2,12 +2,11 @@
 #ifndef PLAYER_H_INCLUDED
 #define PLAYER_H_INCLUDED
 
-#include "_vector2.h"
-#include "Entity.h"
-#include "Bullet.h"
-#include "asteroid.h"
-#include "SDLEvent.hpp"
-#include <SDL2/SDL_opengl.h>
+#include "_vector2.hpp"
+#include "Entity.hpp"
+#include "Bullet.hpp"
+#include "asteroid.hpp"
+
 
 
 class Player : public Entity {
@@ -15,7 +14,6 @@ private:
 	bool isSpeedingUp; //check if the ship is moving
 	Vector2 shipPoints[4];
 	Vector2 thrusterPoints[8];
-	
 
 public:
 
@@ -29,6 +27,7 @@ public:
 	void drawLines(Asteroid* asteroid_);
 
 	void setIsSpeedingUp(); 
+	void setPosition(Vector2);
 	void acceleration(Vector2 impulse);
 	void StopThrust();
 	Vector2 getPosition();

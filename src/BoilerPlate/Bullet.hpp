@@ -3,9 +3,9 @@
 #ifndef BULLET_H_INCLUDED
 #define BULLET_H_INCLUDED
 
-#include "_vector2.h"
-#include "Entity.h"
-#include <SDL2/SDL_opengl.h>
+#include "_vector2.hpp"
+#include "Entity.hpp"
+#include <SDL_opengl.h>
 
 
 const int maxActiveTime = 70;

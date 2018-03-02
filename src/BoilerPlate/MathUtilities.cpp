@@ -1,4 +1,4 @@
-#include "MathUtilities.h"
+#include "MathUtilities.hpp"
 #include <iostream>
 #include <math.h>
 using namespace std;

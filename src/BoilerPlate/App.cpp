@@ -84,7 +84,6 @@ namespace Engine
 		// Init the external dependencies
 		//
 
-		ShowText->Init();
 		bool success = SDLInit() && GlewInit();
 		if (!success)
 		{
@@ -255,11 +254,10 @@ namespace Engine
 		
 		GameAsteroids.RenderGame();
 		GameAsteroids.DrawCircles();
-		ShowText = new TextRenderizing(m_width, m_height);
 
-		ShowText->drawScore(GameAsteroids.getScore());
+		GameAsteroids.drawScore();
 		if (!GameAsteroids.getPlayerStatus()) {
-			ShowText->drawEndGameMessage();
+			GameAsteroids.drawEndGameMessage();
 		}
 		if (showFrame) {
 			createFrameRateGraph();

@@ -1,4 +1,5 @@
 #include "Game.hpp"
+#include "TextRenderizing.hpp"
 
 const char smalll = 's';
 const char medium = 'm';
@@ -16,6 +17,8 @@ Game::Game(int width_, int height_) {
 	for (int i =0 ; i < 4+wave; i++) {
 		asteroids.push_back(new Asteroid(width_, height_, 'l'));
 		}
+	userFeedBackMessages.Init();
+	userFeedBackMessages = TextRenderizing(width, height);
 	debugMode = false;
 	height = height_;
 	width = width_;
@@ -220,6 +223,37 @@ void Game::UpdateGame(float deltaTime) {
 
 
 }
+
+void Game::drawScore() {
+	SDL_Color black;
+	black.r = 0;
+	black.g = 0;
+	black.b = 0;
+	black.a = 0;
+
+
+	
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	userFeedBackMessages.RenderText(std::to_string(score), black, (width / 2) - 148, (height / 2) - 120);
+
+}
+
+
+void Game::drawEndGameMessage() {
+	SDL_Color black;
+	black.r = 0;
+	black.g = 0;
+	black.b = 0;
+	black.a = 0;
+
+	userFeedBackMessages.RenderText("GAME OVER", black, -100.0, -25.0);
+	userFeedBackMessages.RenderText("Press R to play again   -  Press ESC to exit", black, -420.0, -100.0);
+
+}
+
+
+
 
 
 

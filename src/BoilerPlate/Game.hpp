@@ -7,6 +7,7 @@
 #include "asteroid.hpp"
 #include "Player.hpp"
 #include "Bullet.hpp"
+#include "TextRenderizing.hpp"
 #include <ctime>
 
 
@@ -25,7 +26,7 @@ private:
 	int                             lives;
 	int								wave;
 	int								getting2000MorePointsCounter;
-
+	TextRenderizing                 userFeedBackMessages;
 	bool debugMode;
 	bool isPlayerAlive;
 
@@ -53,7 +54,8 @@ public:
 	void SwitchDebugMode();
 	void DrawCircles();
 	void ResizeWidthAndHeight(int width_, int height_);
-
+	void drawScore();
+	void drawEndGameMessage();
 
 	void UpdateGame(float deltaTime);
 	void RenderGame();

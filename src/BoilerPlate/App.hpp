@@ -74,8 +74,7 @@ namespace Engine
 		Game								GameAsteroids;
 		float                               frameDeltaTime;
 		Vector2								frames[20];
-		int                               framePosition;
-		TextRenderizing*                   ShowText;
+		int									framePosition;
 
 
 		char								smalll;

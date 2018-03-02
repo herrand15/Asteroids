@@ -8,6 +8,7 @@ TextRenderizing::TextRenderizing(int width_ , int height_) {
 	height = height_;
 	width = width_;
 }
+TextRenderizing::TextRenderizing(){}
 
 bool TextRenderizing::Init() {
 	if (TTF_Init() == -1) {
@@ -77,36 +78,5 @@ void TextRenderizing::RenderText(std::string message, SDL_Color color, float x, 
 	glDeleteTextures(1, &texId);
 }
 
-
-
-
-
-
-
-void TextRenderizing::drawScore(int score) {
-	SDL_Color black;
-	black.r = 0;
-	black.g = 0;
-	black.b = 0;
-	black.a = 0;
-
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	RenderText(std::to_string(score), black, (width/2) -148, (height/2)-120);
-	
-	}
-
-
-void TextRenderizing::drawEndGameMessage() {
-	SDL_Color black;
-	black.r = 0;
-	black.g = 0;
-	black.b = 0;
-	black.a = 0;
-
-		RenderText("GAME OVER", black, -100.0, -25.0);
-		RenderText("Press R to play again   -  Press ESC to exit", black, -420.0, -100.0);
-
-}
 
 

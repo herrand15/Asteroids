@@ -1,18 +1,20 @@
-#include "Player.h"
-#include "MathUtilities.h"
-
+#include "Player.hpp"
+#include "MathUtilities.hpp"
 
 
 const float MAX_SPEED = 400;
 const float FRICTION = 0.99f;
 const float breakAway = 8.5f;
+const float ROTATIONANGLE = 270;
+const float BULLETVELOCITY = 500.0;
+const int MINIMUNDISTANCEFORDEBUGLINE = 400;
 
-Player::Player(float width_, float height_) {
+Player::Player(int width_, int height_) {
 	position = Vector2(Vector2::Origin);
 	
 	height = height_;
 	width = width_;
-	directionAngle = 0.0;
+	directionAngle = 0.0f;
 	radius = 23.50;
 	Mass = 1.0;
 	
@@ -36,15 +38,15 @@ Player::Player(float width_, float height_) {
 
 void Player::MoveForward() {
 
-	acceleration(Vector2(breakAway, breakAway));
+	Acceleration(Vector2(breakAway, breakAway));
 }
 
 void Player::RotateLeft() {
-	directionAngle += degreeToRadians(270);
+	directionAngle += degreeToRadians(ROTATIONANGLE);
 }
 
 void Player::RotateRight() {
-	directionAngle -= degreeToRadians(270);
+	directionAngle -= degreeToRadians(ROTATIONANGLE);
 }
 
 
@@ -52,7 +54,11 @@ void Player::setIsSpeedingUp() {
   isSpeedingUp = true;
 }
 
-void Player::drawShip() {
+void Player::setPosition(Vector2 pos) {
+	position = pos;
+}
+
+void Player::DrawShip() {
 
     glColor3f(0.0, 0.0, 0.0);
 	glBegin(GL_POLYGON);
@@ -62,7 +68,7 @@ void Player::drawShip() {
 	glEnd();
 }
 
-void Player::drawThruster() {
+void Player::DrawThruster() {
 	glColor3f(1.0, 0.5, 0.0);
 	glBegin(GL_POLYGON);
 
@@ -74,7 +80,7 @@ void Player::drawThruster() {
 }
 
 
-void Player::acceleration(Vector2 impulse) {
+void Player::Acceleration(Vector2 impulse) {
 	velocity.x += (impulse.x / Mass) * cos(degreeToRadians(directionAngle+45) );
 	velocity.y += (impulse.y / Mass) * sin(degreeToRadians(directionAngle+45) );
 	
@@ -87,9 +93,9 @@ void Player::Render() {
 	glTranslatef(position.x ,position.y, 0.0f);
 	glRotatef(directionAngle, 0.0, 0.0, 1.0);
 
-	drawShip();
+	DrawShip();
 	if (isSpeedingUp==true) {
-		drawThruster();
+		DrawThruster();
 	}
 
 }
@@ -98,7 +104,7 @@ Vector2 Player::getPosition() {
 	return position;
 }
 
-int Player::getAngle() {
+float Player::getAngle() {
 	return directionAngle;
 }
 
@@ -119,26 +125,25 @@ void Player::Update(float timeDiff) {
 
 	Entity::Update(timeDiff);
 
-
 	if (!isSpeedingUp) velocity =  velocity* FRICTION;
 
 }
 
 Bullet* Player::shoot() {
 	Bullet * Shot = new Bullet(width,height);
-	Shot->Actualize(Vector2(500.0f,500.0f), position, directionAngle+45);
+	Shot->Actualize(Vector2(BULLETVELOCITY,BULLETVELOCITY), position, directionAngle+45);
 	return Shot;
 }
 
 
-void Player::drawLines(Asteroid* asteroid_) {
+void Player::DrawLines(Asteroid* asteroid_) {
 	
 	glLoadIdentity();
 	glTranslatef(0.0f, 0.0f, 0.0f);
 	glRotatef(0.0, 0.0, 0.0, 1.0);
 	float distance = sqrt(((position.x - asteroid_->getPosition().x)*(position.x - asteroid_->getPosition().x)) + ((position.y - asteroid_->getPosition().y)*(position.y - asteroid_->getPosition().y)));
 
-	if (distance < 475) {
+	if (distance < MINIMUNDISTANCEFORDEBUGLINE) {
 		glColor3f(1.0, 0.0, 0.0);
 		glBegin(GL_LINE_STRIP);
 		glVertex2f(position.x, position.y);

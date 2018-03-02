@@ -8,17 +8,10 @@
     <ClCompile Include="stb_image.c" />
     <ClCompile Include="ColorRepresentation.cpp" />
     <ClCompile Include="MathUtilities.cpp" />
-    <ClCompile Include="Color.cpp" />
     <ClCompile Include="_vector2.cpp">
       <Filter>Engine\Source files</Filter>
     </ClCompile>
-    <ClCompile Include="_vector3.cpp">
-      <Filter>Engine\Source files</Filter>
-    </ClCompile>
     <ClCompile Include="Player.cpp">
-      <Filter>Engine\Source files</Filter>
-    </ClCompile>
-    <ClCompile Include="_vector4.cpp">
       <Filter>Engine\Source files</Filter>
     </ClCompile>
     <ClCompile Include="asteroid.cpp">
@@ -30,35 +23,47 @@
     <ClCompile Include="Bullet.cpp">
       <Filter>Engine\Source files</Filter>
     </ClCompile>
+    <ClCompile Include="Color.cpp">
+      <Filter>Engine\Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="Game.cpp">
+      <Filter>Engine\Source files</Filter>
+    </ClCompile>
+    <ClCompile Include="TextRenderizing.cpp">
+      <Filter>Engine\Source files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.hpp" />
-    <ClInclude Include="SDLEvent.hpp" />
     <ClInclude Include="TimeManager.hpp" />
     <ClInclude Include="Color.h" />
-    <ClInclude Include="ColorRepresentation.h" />
-    <ClInclude Include="MathUtilities.h" />
-    <ClInclude Include="_vector2.h">
+    <ClInclude Include="TextRenderizing.hpp">
       <Filter>Engine\Header files</Filter>
     </ClInclude>
-    <ClInclude Include="_vector3.h">
+    <ClInclude Include="IncludeSDL.hpp">
       <Filter>Engine\Header files</Filter>
     </ClInclude>
-    <ClInclude Include="Player.h">
+    <ClInclude Include="_vector2.hpp">
       <Filter>Engine\Header files</Filter>
     </ClInclude>
-    <ClInclude Include="_vector4.h">
+    <ClInclude Include="asteroid.hpp">
       <Filter>Engine\Header files</Filter>
     </ClInclude>
-    <ClInclude Include="asteroid.h">
+    <ClInclude Include="Bullet.hpp">
       <Filter>Engine\Header files</Filter>
     </ClInclude>
-    <ClInclude Include="Entity.h">
+    <ClInclude Include="Entity.hpp">
       <Filter>Engine\Header files</Filter>
     </ClInclude>
-    <ClInclude Include="Bullet.h">
+    <ClInclude Include="Game.hpp">
       <Filter>Engine\Header files</Filter>
     </ClInclude>
+    <ClInclude Include="Player.hpp">
+      <Filter>Engine\Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="ColorRepresentation.hpp" />
+    <ClInclude Include="SDLEvent.h" />
+    <ClInclude Include="MathUtilities.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Engine">
@@ -70,5 +75,8 @@
     <Filter Include="Engine\Header files">
       <UniqueIdentifier>{da8cc683-e66e-46b9-be58-7d0e16e23f76}</UniqueIdentifier>
     </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="Hyperspace.ttf" />
   </ItemGroup>
 </Project>

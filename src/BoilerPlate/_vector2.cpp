@@ -1,4 +1,4 @@
-#include "_vector2.h"
+#include "_vector2.hpp"
 #include <cmath>
 
 
@@ -88,23 +88,26 @@ Vector2& Vector2::operator/=( Vector2& rightSide)
 
 Vector2& Vector2::operator+( Vector2& rightSide) 
 {
-	return Vector2(
-		x + rightSide.x,
-		y + rightSide.y);
+	
+	return Vector2( x + rightSide.x, y + rightSide.y);
 }
 
 Vector2& Vector2::operator-(Vector2& rightSide) 
 {
-	return Vector2(
-		x - rightSide.x,
-		y - rightSide.y);
+	Vector2 result;
+	result.x = x - rightSide.x;
+	result.y = y - rightSide.y;
+
+	return result;
 }
 
 Vector2& Vector2::operator*( Vector2& rightSide) 
 {
-	return Vector2(
-		x * rightSide.x,
-		y * rightSide.y);
+	Vector2 result;
+	result.x = x * rightSide.x;
+	result.y = y * rightSide.y;
+
+	return result;
 }
 
 Vector2& Vector2::operator/( Vector2& rightSide) 

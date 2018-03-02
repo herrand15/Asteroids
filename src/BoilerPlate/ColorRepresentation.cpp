@@ -1,12 +1,12 @@
-#include "ColorRepresentation.h"
+#include "ColorRepresentation.hpp"
 
 ColorRepresentation::ColorRepresentation() {
-	red = Color(1.0, 0.0, 0.0, 1.0);
-	green = Color(0.0, 1.0, 0.0, 1.0);
-	white = Color(1.0, 1.0, 1.0, 1.0);
-	yellow = Color(1.0, 1.0, 0.0, 1.0);
-	orange = Color(1.0, 0.5, 0.0, 1.0);
-	midnightBlue = Color(0.184, 0.184, 0.309, 1.0);
+	red = Color(1.0f, 0.0f, 0.0f, 1.0f);
+	green = Color(0.0f, 1.0f, 0.0f, 1.0f);
+	white = Color(1.0f, 1.0f, 1.0f, 1.0f);
+	yellow = Color(1.0f, 1.0f, 0.0f, 1.0f);
+	orange = Color(1.0f, 0.5f, 0.0f, 1.0f);
+	midnightBlue = Color(0.184f, 0.184f, 0.309f, 1.0f);
 }
 
 Color ColorRepresentation::turnRed() {

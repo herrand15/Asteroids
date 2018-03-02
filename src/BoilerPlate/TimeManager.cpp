@@ -45,7 +45,7 @@ namespace Engine
 #endif
 	}
 
-	double TimeManager::GetElapsedTimeInMicroseconds()
+	double TimeManager::getElapsedTimeInMicroseconds()
 	{
 #ifdef WIN32
 		if (!m_stopped)
@@ -68,18 +68,18 @@ namespace Engine
 		return m_endTimeInMicroSeconds - m_startTimeInMicroSeconds;
 	}
 
-	double TimeManager::GetElapsedTimeInMilliseconds()
+	double TimeManager::getElapsedTimeInMilliseconds()
 	{
-		return this->GetElapsedTimeInMicroseconds() * 0.001;
+		return this->getElapsedTimeInMicroseconds() * 0.001;
 	}
 
-	double TimeManager::GetElapsedTimeInSeconds()
+	double TimeManager::getElapsedTimeInSeconds()
 	{
-		return this->GetElapsedTimeInMicroseconds() * 0.000001;
+		return this->getElapsedTimeInMicroseconds() * 0.000001;
 	}
 
-	double TimeManager::GetElapsedTime()
+	double TimeManager::getElapsedTime()
 	{
-		return this->GetElapsedTimeInSeconds();
+		return this->getElapsedTimeInSeconds();
 	}
 }

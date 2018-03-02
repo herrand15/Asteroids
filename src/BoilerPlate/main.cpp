@@ -20,7 +20,7 @@ int main(int argc, char* argv[])
 	// This will help you detect leaks when using Visual C++
 	// Uncomment this line to start getting reports!
 	assert(_CrtCheckMemory());
-	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+	_CrtsetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 #endif
 
 	// Create Game Object

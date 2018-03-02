@@ -1,12 +1,13 @@
 #include "App.hpp"
 #include <iostream>
 #include <algorithm>
-#include "ColorRepresentation.h"
+#include "ColorRepresentation.hpp"
 // OpenGL includes
-#include <SDL2/SDL_opengl.h>
 
-#include "_vector2.h"
-//#include <ctime>
+
+#include "_vector2.hpp"
+#include <string>
+
 
 namespace Engine
 {
@@ -25,22 +26,18 @@ namespace Engine
 	{
 		
 		m_state = GameState::UNINITIALIZED;
-		m_lastFrameTime = m_timer->GetElapsedTimeInSeconds();
+		m_lastFrameTime = m_timer->getElapsedTimeInSeconds();
 
 		upArrow = false;
 		leftArrow = false;
 		rightArrow = false;
 		spaceBar = false;
-		debugMode = false;
 		showFrame = false;
 		large = 'l';
 		smalll = 's';
 		medium = 'm';
-		//srand(time(NULL));
 
-		p1 = new Player(m_width, m_height);
-		asteroids.push_back(new Asteroid(m_width, m_height, large));
-
+		GameAsteroids = Game(m_width, m_height);
 		
 		for (int i = 0; i < maxFrames; i++) {
 			frames[i] = Vector2((float)i, 0.0f);
@@ -49,9 +46,7 @@ namespace Engine
 		frameDeltaTime = DESIRED_FRAME_RATE;
 		
 	}
-
-
-
+	
 	
 	App::~App()
 	{
@@ -88,6 +83,7 @@ namespace Engine
 	{
 		// Init the external dependencies
 		//
+
 		bool success = SDLInit() && GlewInit();
 		if (!success)
 		{
@@ -95,7 +91,10 @@ namespace Engine
 			return false;
 		}
 
-		// Setup the viewport
+		
+		
+
+		// setup the viewport
 		//
 		SetupViewport();
 
@@ -113,42 +112,37 @@ namespace Engine
 		{
 		case SDL_SCANCODE_UP:
 			SDL_Log("Moviendo adelante");
-			
-			p1->setIsSpeedingUp();
+			GameAsteroids.getPlayer()->setIsSpeedingUp();
 			upArrow = true;
 			break;
 		case SDL_SCANCODE_LEFT:
 			SDL_Log("Rotando a la izquierda");
 			leftArrow = true;
-			
 			break;
 		case SDL_SCANCODE_DOWN:
-	
 			break;
 		case SDL_SCANCODE_RIGHT:
 			SDL_Log("Rotando a la derecha");
 			rightArrow = true;
-			
 			break;
 		case SDL_SCANCODE_D:
-			if (debugMode == false) {
-				SDL_Log("Modo de debug activado");
-				debugMode = true;
-			}
-			else if (debugMode == true) {
-				SDL_Log("Modo de debug desactivado");
-				debugMode = false;
+			GameAsteroids.SwitchDebugMode();
+				SDL_Log("Cambiando modo de debug");
+			break;
+		case SDL_SCANCODE_R:
+			SDL_Log("Reiniciando juego");
+			if (GameAsteroids.getPlayerStatus() == 0) {
+				GameAsteroids.RestartGame();
 			}
 			break;
-		case SDL_SCANCODE_KP_PLUS:
+		case SDL_SCANCODE_A:
 			SDL_Log("Anadiendo asteroide");
-			asteroids.push_back(new Asteroid(m_width, m_height,large));
+			GameAsteroids.AddAsteroid();
 			break;
-		case SDL_SCANCODE_KP_MINUS:
-			if (asteroids.size()>0) {
+		case SDL_SCANCODE_S:
+			GameAsteroids.EliminateAsteroid();
 				SDL_Log("Eliminando asteroide");
-				asteroids.pop_back();
-			}
+				
 			break;
 		case SDL_SCANCODE_SPACE:
 			SDL_Log("Disparando");
@@ -176,10 +170,10 @@ namespace Engine
 
 		case SDL_SCANCODE_UP:
 			upArrow = false;
-			p1->StopThrust();
+			GameAsteroids.getPlayer()->StopThrust();
 			break;
 		case SDL_SCANCODE_LEFT:
-			SDL_Log("Rotando a la izquierda");
+		
 			leftArrow = false;
 			
 			break;
@@ -187,12 +181,10 @@ namespace Engine
 			
 			break;
 		case SDL_SCANCODE_RIGHT:
-			SDL_Log("Rotando a la derecha");
 			rightArrow = false;
 			
 			break;
 		case SDL_SCANCODE_SPACE:
-			SDL_Log("Disparando");
 			spaceBar = false;
 			break;
 		case SDL_SCANCODE_ESCAPE:
@@ -206,90 +198,49 @@ namespace Engine
 		}
 	}
 
+	
+
 	void App::Update()
 	{
-		double startTime = m_timer->GetElapsedTimeInSeconds();
+		double startTime = m_timer->getElapsedTimeInSeconds();
 
 		// Update code goes here
 		//
 		
 		if (upArrow)
-			p1->MoveForward();
+			GameAsteroids.getPlayer()->MoveForward();
 		if (leftArrow)
-			p1->RotateLeft();
+			GameAsteroids.getPlayer()->RotateLeft();
 		if (rightArrow)
-			p1->RotateRight();
+			GameAsteroids.getPlayer()->RotateRight();
 		if (spaceBar) {
-			if (bullets.size()<3  ) {
-				bullets.push_back(p1->shoot());
-			}
+			GameAsteroids.ShotABullet();
 			spaceBar = false;
 		}
 		
-		p1->Update(frameDeltaTime);
+		GameAsteroids.UpdateGame(frameDeltaTime);
 
-		for (int i = 0; i < asteroids.size(); i++) {
-			asteroids[i]->Update(frameDeltaTime);
-		}
 
-		std::vector <Bullet*> activeBullets;
-		for (auto bullet : bullets) {
-			bullet->Update(frameDeltaTime );
-			if (debugMode) {
-				bullet->drawCircle();
-			}
-			if (!bullet->IsActive()) activeBullets.push_back(bullet);
-		}
-
-		bullets = activeBullets;
-
-		if (!debugMode) {
-			for (int i = 0; i < asteroids.size(); i++) {
-				for (int j = 0; j < bullets.size(); j++) {
-					if (asteroids[i]->checkCollision(bullets[j])) {
-						if (asteroids[i]->getSize() == 'l') {
-							asteroids[i]->setSize('m');
-							bullets.erase(bullets.begin() + j);
-							Vector2 pos = asteroids[i]->getPosition();
-							asteroids.insert(asteroids.begin() + (i), new Asteroid(m_width, m_height, medium) );
-							asteroids[i]->setPosition(pos);
+		GameAsteroids.CheckAllCollisions();
+		
+		//RenderText("#Ay!", color)
 	
-						}
-						else if (asteroids[i]->getSize() == 'm') {
-							asteroids[i]->setSize('s');
-							bullets.erase(bullets.begin() + j);
-							Vector2 pos = asteroids[i]->getPosition();
-							asteroids.insert(asteroids.begin() + (i), new Asteroid(m_width, m_height, smalll));
-							asteroids[i]->setPosition(pos);
-							
-						}
-						else if (asteroids[i]->getSize() == 's') {
-							bullets.erase(bullets.begin() + j);
-							asteroids.erase(asteroids.begin() + i);
-						}
-					}
-				}
-				
-				if (asteroids[i]->checkCollision(p1)) {
-					delete p1;
-				}
-			}
-		}
 
-		double endTime = m_timer->GetElapsedTimeInSeconds();
+		double endTime = m_timer->getElapsedTimeInSeconds();
 		double nextTimeFrame = startTime + DESIRED_FRAME_TIME;
 
-		frameDeltaTime = DESIRED_FRAME_TIME - ( endTime - startTime);
+		frameDeltaTime =(DESIRED_FRAME_TIME - ( (float)endTime - (float)startTime));
 		createFrameRate();
+
 		while (endTime < nextTimeFrame)
 		{
 			// Spin lock
-			endTime = m_timer->GetElapsedTimeInSeconds();
+			endTime = m_timer->getElapsedTimeInSeconds();
 		}
 
 		double elapsedTime = endTime - startTime;        
 
-		m_lastFrameTime = m_timer->GetElapsedTimeInSeconds();
+		m_lastFrameTime = m_timer->getElapsedTimeInSeconds();
 
 		m_nUpdates++;
 		
@@ -298,26 +249,19 @@ namespace Engine
 	void App::Render()
 	{
 		ColorRepresentation background;
-		glClearColor(background.midnightBlue.R, background.midnightBlue.G, background.midnightBlue.B, 1.0);
+		glClearColor((float)background.midnightBlue.R, (float)background.midnightBlue.G, (float)background.midnightBlue.B, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 		
-		p1->Render();
-		
-		for (int i = 0; i < asteroids.size(); i++) {
-			asteroids[i]->Render();
-		}
-		if (debugMode) {
-			p1->drawCircle();
-			for (int i = 0; i < asteroids.size(); i++) {
-				asteroids[i]->drawCircle();
-				p1->drawLines(asteroids[i]);
-			}
+		GameAsteroids.RenderGame();
+		GameAsteroids.DrawCircles();
+
+		GameAsteroids.DrawScore();
+		if (!GameAsteroids.getPlayerStatus()) {
+			GameAsteroids.DrawEndGameMessage();
 		}
 		if (showFrame) {
 			createFrameRateGraph();
 		}
-
-		for (auto bullet : bullets) bullet->Render();
 
 		SDL_GL_SwapWindow(m_mainWindow);
 	}
@@ -371,20 +315,20 @@ namespace Engine
 		float halfWidth = m_width * 0.5f;
 		float halfHeight = m_height * 0.5f;
 
-		// Set viewport to match window
+		// set viewport to match window
 		//
 		glViewport(0, 0, m_width, m_height);
 
-		// Set Mode to GL_PROJECTION
+		// set Mode to GL_PROJECTION
 		//
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
 
-		// Set projection MATRIX to ORTHO
+		// set projection MATRIX to ORTHO
 		//
 		glOrtho(-halfWidth, halfWidth, -halfHeight, halfHeight, -1, 1);
 
-		// Setting Mode to GL_MODELVIEW
+		// setting Mode to GL_MODELVIEW
 		//
 		glMatrixMode(GL_MODELVIEW);
 	}
@@ -422,10 +366,12 @@ namespace Engine
 	void App::createFrameRateGraph() {
 		glLoadIdentity();
 		glTranslatef(150.0, -250.0, 0.0);
-		glBegin(GL_LINE_LOOP);
+		
+	
+		glBegin(GL_LINE_STRIP);
 		glColor3f(1.0, 0.0, 1.0);
 		for (int i = 0; i < maxFrames; i++) {
-			glVertex2f(frames[i].x *15.0f, (DESIRED_FRAME_TIME - frames[i].y )* 80000.0f);
+			glVertex2f(frames[i].x *15.0f, (DESIRED_FRAME_TIME - frames[i].y )* 25000.0f);
 			}
 		glEnd();
 
@@ -439,14 +385,7 @@ namespace Engine
 		//
 		m_width = width;
 		m_height = height;
-		p1->resizeWidthAndHeight(m_width, m_height);
-		for (int i = 0; i < asteroids.size(); i++) {
-			asteroids[i]->resizeWidthAndHeight(m_width, m_height);
-		}
-		
-		for (int i = 0; i < bullets.size(); i++) {
-			bullets[i]->resizeWidthAndHeight(m_width, m_height);
-		}
+		GameAsteroids.ResizeWidthAndHeight(m_width, m_height);
 	
 		SetupViewport();
 	}

@@ -1,5 +1,5 @@
-#include "Bullet.h"
-#include "MathUtilities.h"
+#include "Bullet.hpp"
+#include "MathUtilities.hpp"
 #include <math.h>
 
 Bullet::Bullet(int width_, int height_): Entity(width_,height_) {
@@ -20,7 +20,7 @@ Bullet::Bullet(int width_, int height_): Entity(width_,height_) {
 
 
 
-void Bullet::Actualize(Vector2 impulse, Vector2 position_, int angle) {
+void Bullet::Actualize(Vector2 impulse, Vector2 position_, float angle) {
 	directionAngle = angle;
 	position = position_;
 

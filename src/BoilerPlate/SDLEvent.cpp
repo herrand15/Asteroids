@@ -1,4 +1,4 @@
-#include "SDLEvent.hpp"
+#include "SDLEvent.h"
 
 namespace Engine
 {
